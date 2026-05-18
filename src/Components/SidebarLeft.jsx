@@ -26,7 +26,10 @@ const SidebarLeft = () => {
         />
 
         <Card.Body>
-          <Card.Title className="h6 fw-bold mb-0 mt-5">Name Surname</Card.Title>
+          <Card.Title className="h4 fw-bold mb-0 mt-5">
+            Name Surname <FontAwesomeIcon icon={["fas", "shield-halved"]} />
+          </Card.Title>
+
           <Card.Text className="m-0 p-0">Bio</Card.Text>
           <Card.Text
             className="m-0 p-0 text-muted"
