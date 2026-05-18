@@ -30,7 +30,7 @@ const NavbarLinkedin = () => {
               </p>
             </Nav.Link>
             <Nav.Link className="py-0 d-flex flex-column justify-content-center align-items-center">
-              <FontAwesomeIcon size="xl" icon="fa-solid fa-briefcase" />
+              <FontAwesomeIcon size="xl" icon="fa-solid fa-briefcase pb-3" />
               <p className="m-0">Lavoro</p>
             </Nav.Link>
             <Nav.Link className="py-0 d-flex flex-column justify-content-center align-items-center">
@@ -42,7 +42,7 @@ const NavbarLinkedin = () => {
               <p className="m-0">Notifiche</p>
             </Nav.Link>
             <Nav.Link className="py-0 border-end border-2 d-flex flex-column justify-content-center align-items-center">
-              <Image className="rounded-circle" src="https://placecats.com/40/40" />
+              <Image className="rounded-circle" src="https://placecats.com/30/30" />
               <p className="m-0">Tu</p>
             </Nav.Link>
             <Nav.Link className="py-0 d-flex flex-column justify-content-center align-items-center">
