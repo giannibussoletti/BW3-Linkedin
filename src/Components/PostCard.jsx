@@ -159,6 +159,74 @@ const PostCard = () => {
               <EmojiPicker onEmojiClick={handleEmojiClick} />
             </div>
           )}
+          <section>
+            <Button className="mt-3" variant="">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                role="img"
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                style={{ color: "rgb(74, 85, 101)" }}
+              >
+                <g fill="currentColor" fillRule="evenodd" clipRule="evenodd">
+                  <path d="M7 7a3 3 0 1 0 0 6a3 3 0 0 0 0-6m-1 3a1 1 0 1 1 2 0a1 1 0 0 1-2 0" />
+
+                  <path d="M3 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h18a3 3 0 0 0 3-3V6a3 3 0 0 0-3-3zm18 2H3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h4.314l6.878-6.879a3 3 0 0 1 4.243 0L22 15.686V6a1 1 0 0 0-1-1m0 14H10.142l5.465-5.464a1 1 0 0 1 1.414 0l4.886 4.886A1 1 0 0 1 21 19" />
+                </g>
+              </svg>
+            </Button>
+            <Button className="mt-3" variant="">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                role="img"
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                style={{ color: "rgb(74, 85, 101)" }}
+              >
+                <path
+                  fill="currentColor"
+                  fillRule="evenodd"
+                  d="M8 4h8V2h2v2h1a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1V2h2zM5 8v12h14V8zm2 3h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2zm0 4h2v2h-2zm-4 0h2v2h-2zm-4 0h2v2H7z"
+                />
+              </svg>
+            </Button>
+            <Button className="mt-3" variant="">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                role="img"
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                style={{ color: "rgb(74, 85, 101)" }}
+              >
+                <path
+                  fill="currentColor"
+                  d="M9.075 16.25L12 14.475l2.925 1.775l-.775-3.325l2.6-2.25l-3.425-.275L12 7.25l-1.325 3.15l-3.425.275l2.6 2.25zM12 23.3L8.65 20H4v-4.65L.7 12L4 8.65V4h4.65L12 .7L15.35 4H20v4.65L23.3 12L20 15.35V20h-4.65zm0-2.8l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18h3.5zm0-8.5"
+                />
+              </svg>
+            </Button>
+            <Button className="mt-3" variant="">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                role="img"
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                style={{ color: "rgb(74, 85, 101)" }}
+              >
+                <path
+                  fill="currentColor"
+                  d="M5 13v-1h6V6h1v6h6v1h-6v6h-1v-6z"
+                />
+              </svg>
+            </Button>
+          </section>
         </Modal.Body>
 
         <Modal.Footer>
