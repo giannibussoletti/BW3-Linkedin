@@ -3,7 +3,7 @@ import { Container, Navbar, Image, InputGroup, Form, Nav } from "react-bootstrap
 
 const NavbarLinkedin = () => {
   return (
-    <Container fluid>
+    <Container fluid className="bg-light">
       <Navbar className="p-0">
         <Container>
           <Navbar.Brand className="p-0">
