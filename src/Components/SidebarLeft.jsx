@@ -82,13 +82,13 @@ const SidebarLeft = () => {
           </p>
         </div>
         <div className="d-flex">
-          <FontAwesomeIcon icon={["far", "newspaper"]} />
+          <FontAwesomeIcon icon={["fas", "newspaper"]} />
           <p style={{ fontSize: "0.70rem" }} className="fw-bold px-3">
             Newsletter
           </p>
         </div>
         <div className="d-flex">
-          <FontAwesomeIcon icon={["far", "calendar"]} />
+          <FontAwesomeIcon icon={["fas", "calendar"]} />
           <p style={{ fontSize: "0.70rem" }} className="m-0 fw-bold px-3">
             Eventi
           </p>
