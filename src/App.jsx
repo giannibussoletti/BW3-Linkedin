@@ -1,11 +1,11 @@
-import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = function () {
   return (
     <>
       <h1>Progetto Linkedin</h1>
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;
