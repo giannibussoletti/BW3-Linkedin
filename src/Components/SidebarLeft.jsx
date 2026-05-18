@@ -1,8 +1,10 @@
 import { Card, Col } from "react-bootstrap";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 const SidebarLeft = () => {
   return (
-    <Col xs={12} md={2} className="m-3">
+    <Col xs={12} md={2}>
       <Card className="shadow-sm rounded-3 position-relative mb-3">
         <Card.Img
           className="rounded-top-3"
@@ -67,18 +69,30 @@ const SidebarLeft = () => {
         </div>
       </Card>
       <Card className="p-2 px-3 shadow-sm rounded-3 mb-3">
-        <p style={{ fontSize: "0.70rem" }} className="fw-bold">
-          Elementi salvati
-        </p>
-        <p style={{ fontSize: "0.70rem" }} className="fw-bold">
-          Gruppi
-        </p>
-        <p style={{ fontSize: "0.70rem" }} className="fw-bold">
-          Newsletter
-        </p>
-        <p style={{ fontSize: "0.70rem" }} className="m-0 fw-bold">
-          Eventi
-        </p>
+        <div className="d-flex">
+          <FontAwesomeIcon icon={["fas", "bookmark"]} />
+          <p style={{ fontSize: "0.70rem" }} className="fw-bold px-3">
+            Elementi salvati
+          </p>
+        </div>
+        <div className="d-flex">
+          <FontAwesomeIcon icon={["fas", "people-group"]} />
+          <p style={{ fontSize: "0.70rem" }} className="fw-bold px-3">
+            Gruppi
+          </p>
+        </div>
+        <div className="d-flex">
+          <FontAwesomeIcon icon={["far", "newspaper"]} />
+          <p style={{ fontSize: "0.70rem" }} className="fw-bold px-3">
+            Newsletter
+          </p>
+        </div>
+        <div className="d-flex">
+          <FontAwesomeIcon icon={["far", "calendar"]} />
+          <p style={{ fontSize: "0.70rem" }} className="m-0 fw-bold px-3">
+            Eventi
+          </p>
+        </div>
       </Card>
     </Col>
   );
