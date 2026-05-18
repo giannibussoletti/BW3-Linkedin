@@ -1,10 +1,28 @@
+import { useState } from "react";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
+import EmojiPicker from "emoji-picker-react";
 
 const PostCard = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [postText, setPostText] = useState("");
+  const [showPicker, setShowPicker] = useState(false);
+
+  const handleClose = () => setShowModal(false);
+  const handleShow = () => setShowModal(true);
+  const handleEmojiClick = (emojiData) => {
+    setPostText((prev) => prev + emojiData.emoji);
+  };
+  const handlePost = () => {
+    console.log(postText);
+    setPostText("");
+    handleClose();
+  };
   return (
     <>
-      <Card style={{ width: "50rem" }}>
+      <Card style={{ width: "50rem", height: "10rem" }}>
         <Card.Body className="d-flex">
           <Card.Img
             style={{ margin: "1vw", width: "5vw", borderRadius: 20 }}
@@ -17,6 +35,7 @@ const PostCard = () => {
             type="text"
             placeholder="Create post..."
             readOnly
+            onClick={handleShow}
           />
         </Card.Body>
         <section className="d-flex justify-content-around">
@@ -77,6 +96,94 @@ const PostCard = () => {
           </div>
         </section>
       </Card>
+      <Modal show={showModal} onHide={handleClose} centered>
+        <Modal.Header closeButton>
+          <Card.Img
+            style={{ margin: "1vw", width: "5vw", borderRadius: 20 }}
+            className="m-1 w-3 rounded "
+            variant="left"
+            src="./mockup/user1.png"
+          />
+          <Modal.Title>userName</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <Form.Control
+            as="textarea"
+            rows={10}
+            placeholder="What do you want to talk about?"
+            value={postText}
+            onChange={(e) => setPostText(e.target.value)}
+          />
+          <Button
+            className="mt-3"
+            variant=""
+            onClick={() => setShowPicker(!showPicker)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              role="img"
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+              style={{ color: "rgb(28, 32, 51)" }}
+            >
+              <g fill="none">
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="9.25"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                />
+
+                <circle cx="9" cy="9.5" r="1.25" fill="currentColor" />
+
+                <circle cx="15" cy="9.5" r="1.25" fill="currentColor" />
+
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                  d="M15.464 14.25a4 4 0 0 1-6.928 0"
+                />
+              </g>
+            </svg>
+          </Button>
+          {showPicker && (
+            <div className="mt-3">
+              <EmojiPicker onEmojiClick={handleEmojiClick} />
+            </div>
+          )}
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="" onClick={handleClose}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              role="img"
+              width="20"
+              height="20"
+              viewBox="0 0 15 15"
+              fill="none"
+            >
+              <path
+                fill="currentColor"
+                d="M7.5.85a6.65 6.65 0 1 1-5.072 2.349l.073-.07a.5.5 0 0 1 .69.717l-.154.188A5.65 5.65 0 1 0 8 1.874v1.648a.5.5 0 0 1-1 0V1.35l.01-.1a.5.5 0 0 1 .49-.4m-3.25 3.4a.25.25 0 0 1 .323-.026L8.08 6.741a.96.96 0 1 1-1.34 1.34L4.225 4.572a.25.25 0 0 1 .026-.323"
+              />
+            </svg>
+          </Button>
+
+          <Button variant="primary" onClick={handlePost}>
+            Post
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };
