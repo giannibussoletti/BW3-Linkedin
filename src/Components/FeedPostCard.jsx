@@ -16,18 +16,16 @@ const FeedPostCard = () => {
 
       const data = await response.json()
 
-      console.log(data)
       const sortedPosts = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
 
       setPosts(sortedPosts)
-
-      setPosts(data)
     } catch (error) {
       console.log(error)
     }
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchPosts()
   }, [])
 
