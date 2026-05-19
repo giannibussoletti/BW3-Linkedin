@@ -6,11 +6,13 @@ import LanguagesCard from "./LanguagesCard"
 import InterestsCard from "./InterestsCard"
 import ProfileFooter from "./ProfileFooter"
 import MainProfileInfo from "./MainProfileInfo/MainProfileInfo"
+import AnalisiCard from "./AnalisiCard"
 
 const LowProfilePage = () => {
   return (
     <Container className="py-4" style={{ maxWidth: "850px" }}>
       <MainProfileInfo />
+      <AnalisiCard />
       <ExperienceCard />
       <EducationCard />
       <SkillsCard />
