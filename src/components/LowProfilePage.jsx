@@ -5,7 +5,7 @@ import SkillsCard from "./SkillsCard"
 import LanguagesCard from "./LanguagesCard"
 import InterestsCard from "./InterestsCard"
 import ProfileFooter from "./ProfileFooter"
-import MainProfileInfo from "./MainProfileInfo"
+import MainProfileInfo from "./MainProfileInfo/MainProfileInfo"
 
 const LowProfilePage = () => {
   return (
