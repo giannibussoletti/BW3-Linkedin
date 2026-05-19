@@ -12,6 +12,7 @@ import PostCard from "./Components/PostCard";
 import SidebarLeft from "./Components/SidebarLeft";
 import ButtonPic from "./Components/ButtonPic";
 import ChangePic from "./Components/ChangePic";
+import ProfileDestination from "./Components/ProfileDestination";
 
 const App = function () {
   return (
@@ -19,6 +20,7 @@ const App = function () {
       <NavbarLinkedin />
       <ButtonPic />
       <ChangePic />
+      <ProfileDestination />
       <SidebarLeft />
       <PostCard />
     </div>
