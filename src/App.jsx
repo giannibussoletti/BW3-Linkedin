@@ -3,6 +3,7 @@ import NavbarLinkedin from "./Components/navbar/NavbarLinkedin"
 import PostCard from "./Components/PostCard"
 import SidebarLeft from "./Components/SidebarLeft"
 import RightSideBar from "./Components/RightSideBar"
+import LowProfilePage from "./Components/LowProfilePage"
 /* import all the icons in Free Solid, Free Regular, and Brands styles */
 
 library.add(fas, far, fab)
@@ -28,6 +29,7 @@ const App = function () {
           <Col xs={12} md={3} lg={3}>
             <RightSideBar />
           </Col>
+          <LowProfilePage />
         </Row>
       </Container>
     </div>
