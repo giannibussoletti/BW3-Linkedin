@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css"
-import NavbarLinkedin from "./Components/NavbarLinkedin"
+import NavbarLinkedin from "./Components/navbar/NavbarLinkedin"
 /* import all the icons in Free Solid, Free Regular, and Brands styles */
 library.add(fas, far, fab)
 import { library } from "@fortawesome/fontawesome-svg-core"
