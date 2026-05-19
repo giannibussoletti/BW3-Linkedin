@@ -6,10 +6,10 @@ const AnalisiCard = () => {
       <Card.Body>
         <Container fluid>
           <Row>
-            <h5 className="fw-bold mt-2 mb-4">Analisi</h5>
+            <h5 className="fw-bold mt-2 mb-4 p-0">Analisi</h5>
             <Col xs={12} md={4} className="mb-3 mb-md-1 p-0">
-              <Row className="m-0">
-                <Col xs="auto" className="pe-2">
+              <Row className="m-0 p-0">
+                <Col xs="auto" className="pe-2 ps-0">
                   <FontAwesomeIcon size="lg" icon="fa-solid fa-user-group" />
                 </Col>
                 <Col className="p-0">
@@ -20,7 +20,7 @@ const AnalisiCard = () => {
             </Col>
             <Col xs={12} md={4} className="mb-3 mb-md-1 p-0">
               <Row className="m-0">
-                <Col xs="auto" className="pe-2">
+                <Col xs="auto" className="pe-2 ps-0">
                   <FontAwesomeIcon size="lg" icon="fa-solid fa-chart-simple" />
                 </Col>
                 <Col className="p-0">
@@ -32,7 +32,7 @@ const AnalisiCard = () => {
             </Col>
             <Col xs={12} md={4} className="mb-3 mb-md-1 p-0">
               <Row className="m-0">
-                <Col xs="auto" className="pe-2">
+                <Col xs="auto" className="pe-2 ps-0">
                   <FontAwesomeIcon size="lg" icon="fa-solid fa-magnifying-glass" />
                 </Col>
                 <Col className="p-0">
