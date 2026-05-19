@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const SidebarLeft = () => {
   return (
-    <Col xs={12} md={2}>
+    <Col>
       <Card className="shadow-sm rounded-3 position-relative mb-3">
         <Card.Img
           className="rounded-top-3"
