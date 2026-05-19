@@ -3,7 +3,7 @@ import { buttonArray } from "./MainProfileInfo"
 
 const MainProfileInfo = () => {
   return (
-    <Container className="p-0 bg-white mb-3">
+    <Container fluid className="p-0 bg-white mb-3 rounded-3 shadow-sm">
       <Row className="m-0">
         <Col className="p-0">
           <Image className="w-100 rounded-top-3" src="https://placebear.com/790/200" />
@@ -17,7 +17,7 @@ const MainProfileInfo = () => {
             <Image className="rounded-circle" src="https://placebear.com/152/152" />
           </div>
         </Col>
-        <Col xs={8}>
+        <Col xs={12} md={8}>
           <h3 className="fw-semibold">Gianni Bussoletti</h3>
           <p className="m-0">
             Skill up in Full Stack developer presso EPICODE | Amante del cinema | Videomaker | Ex
@@ -30,7 +30,7 @@ const MainProfileInfo = () => {
           <p style={{ fontSize: ".9rem" }} className="text-primary fw-bold">
             84 collegamenti
           </p>
-          <div className="d-flex gap-2 mb-4">
+          <div className="d-flex gap-2 mb-4 flex-wrap">
             {buttonArray.map((button) => {
               return (
                 <Button style={button.style} variant={button.variant} className={button.classes}>
@@ -48,7 +48,7 @@ const MainProfileInfo = () => {
           </div>
         </Col>
         <Col>
-          <div className="d-flex gap-2 align-items-center">
+          <div className="d-none d-md-flex gap-2 align-items-center">
             <div style={{ width: "40px" }}>
               <Image className="w-100" src="./epicodeschool_logo.jpg" />
             </div>

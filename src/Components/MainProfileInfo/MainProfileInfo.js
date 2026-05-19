@@ -1,4 +1,4 @@
-const style = { fontSize: "0.9rem" }
+const style = { fontSize: "0.9rem", whiteSpace: "nowrap" }
 const classes = "rounded-pill fw-semibold border-1"
 
 export const buttonArray = [
