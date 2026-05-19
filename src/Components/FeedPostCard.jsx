@@ -33,7 +33,7 @@ const FeedPostCard = () => {
 
   return (
     <>
-      {posts.map((post) => (
+      {posts.slice(0, 10).map((post) => (
         <Card key={post._id} className="w-100 shadow-sm mb-3">
           <Card.Body>
             {/* HEADER */}
