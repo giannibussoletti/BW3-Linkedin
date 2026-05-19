@@ -1,4 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap-icons/font/bootstrap-icons.css"
+//
 import NavbarLinkedin from "./Components/navbar/NavbarLinkedin"
 import PostCard from "./Components/PostCard"
 import SidebarLeft from "./Components/SidebarLeft"
