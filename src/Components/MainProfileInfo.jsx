@@ -17,9 +17,7 @@ const MainProfileInfo = () => {
           </p>
           <p>
             Guidonia Montecelio, Lazio, Italia{" "}
-            <span small className="text-primary fw-bold">
-              Informazioni di contatto
-            </span>
+            <span className="text-primary fw-bold">Informazioni di contatto</span>
           </p>
         </Col>
         <Col></Col>

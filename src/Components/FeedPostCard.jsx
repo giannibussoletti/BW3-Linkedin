@@ -1,40 +1,35 @@
-import { useEffect, useState } from "react";
-import Card from "react-bootstrap/Card";
+import { useEffect, useState } from "react"
+import Card from "react-bootstrap/Card"
 const TokenPaolo =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTBhZDU4NDA2YmJlOTAwMTVkZWU1N2UiLCJpYXQiOjE3NzkwOTQ5MTYsImV4cCI6MTc4MDMwNDUxNn0.76kWBS67r5ygr_d-wqdXMOaMNYRsOUCAvuKafyaiAHA";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTBhZDU4NDA2YmJlOTAwMTVkZWU1N2UiLCJpYXQiOjE3NzkwOTQ5MTYsImV4cCI6MTc4MDMwNDUxNn0.76kWBS67r5ygr_d-wqdXMOaMNYRsOUCAvuKafyaiAHA"
 
 const FeedPostCard = () => {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([])
 
   const fetchPosts = async () => {
     try {
-      const response = await fetch(
-        "https://striveschool-api.herokuapp.com/api/posts/",
-        {
-          headers: {
-            Authorization: `Bearer ${TokenPaolo}`,
-          },
+      const response = await fetch("https://striveschool-api.herokuapp.com/api/posts/", {
+        headers: {
+          Authorization: `Bearer ${TokenPaolo}`,
         },
-      );
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
-      console.log(data);
-      const sortedPosts = data.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
-      );
+      console.log(data)
+      const sortedPosts = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
 
-      setPosts(sortedPosts);
+      setPosts(sortedPosts)
 
-      setPosts(data);
+      setPosts(data)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchPosts();
-  }, []);
+    fetchPosts()
+  }, [])
 
   return (
     <>
@@ -110,7 +105,7 @@ const FeedPostCard = () => {
         </Card>
       ))}
     </>
-  );
-};
+  )
+}
 
-export default FeedPostCard;
+export default FeedPostCard
