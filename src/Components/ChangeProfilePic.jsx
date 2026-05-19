@@ -3,15 +3,42 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useRef } from "react";
 
 const ChangeProfilePic = ({ onSaveImage }) => {
+  // 1. STATI PER LA GESTIONE IMMAGINE E TRASFORMAZIONI
+  const [imageSrc, setImageSrc] = useState(
+    "https://plus.unsplash.com/premium_photo-1731442837021-3929f70e1710?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8c2NhdHRhcmUlMjBmb3RvfGVufDB8fDB8fHww",
+  );
   const [zoom, setZoom] = useState(1);
   const [rotate, setRotate] = useState(0);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
+
+  // 2. RIFERIMENTI (REFS)
   const dragStart = useRef({ x: 0, y: 0 });
-
   const imageRef = useRef(null);
-  const finalSize = 400; // Dimensione del file finale (400x400)
+  const fileInputRef = useRef(null);
+  const containerRef = useRef(null);
 
+  // 3. LOGICA DI CARICAMENTO FILE DA PC
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImageSrc(reader.result);
+        // Resetta le trasformazioni quando carichi una nuova foto
+        setZoom(1);
+        setRotate(0);
+        setPosition({ x: 0, y: 0 });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
+
+  // 4. LOGICA DI TRASCINAMENTO (DRAG & DROP / TRANSLATE)
   const handleMouseDown = (e) => {
     e.preventDefault();
     setIsDragging(true);
@@ -33,233 +60,235 @@ const ChangeProfilePic = ({ onSaveImage }) => {
     setIsDragging(false);
   };
 
-  const handleApply = () => {
+  // 5. LOGICA DI RITAGLIO E SALVATAGGIO (CANVAS)
+  const handleSave = () => {
     const img = imageRef.current;
-    if (!img) return;
+    const container = containerRef.current;
+    if (!img || !container) return;
 
-    try {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const size = 400; // Dimensione finale della foto profilo quadrata
 
-      canvas.width = finalSize;
-      canvas.height = finalSize;
+    canvas.width = size;
+    canvas.height = size;
 
-      // 1. Troviamo le dimensioni reali dell'immagine così come viene mostrata a schermo dal CSS (object-fit: cover)
-      const containerWidth = img.parentElement.clientWidth;
-      const containerHeight = img.parentElement.clientHeight;
+    // Calcoliamo le dimensioni renderizzate dell'immagine (object-fit: cover)
+    const containerWidth = container.clientWidth;
+    const containerHeight = container.clientHeight;
+    const imageRatio = img.naturalWidth / img.naturalHeight;
+    const containerRatio = containerWidth / containerHeight;
 
-      const imageRatio = img.naturalWidth / img.naturalHeight;
-      const containerRatio = containerWidth / containerHeight;
+    let rWidth, rHeight;
+    if (imageRatio > containerRatio) {
+      rHeight = containerHeight;
+      rWidth = containerHeight * imageRatio;
+    } else {
+      rWidth = containerWidth;
+      rHeight = containerWidth / imageRatio;
+    }
 
-      let renderedWidth, renderedHeight;
+    const scaleX = img.naturalWidth / rWidth;
+    const scaleY = img.naturalHeight / rHeight;
 
-      // Simuliamo l'esatto comportamento di object-fit: cover
-      if (imageRatio > containerRatio) {
-        renderedHeight = containerHeight;
-        renderedWidth = containerHeight * imageRatio;
-      } else {
-        renderedWidth = containerWidth;
-        renderedHeight = containerWidth / imageRatio;
-      }
+    // Il mirino è tondo ed è grande 240px a schermo
+    const mirinoSize = 240;
 
-      // 2. Rapporto di conversione tra i pixel dello schermo e i pixel nativi del file originale
-      const scaleFactorX = img.naturalWidth / renderedWidth;
-      const scaleFactorY = img.naturalHeight / renderedHeight;
+    // --- CORREZIONE CHIAVE PER MOVIMENTO CORRETTO CON ROTAZIONE ---
+    // Calcoliamo lo spostamento "reale" compensando l'angolo di rotazione
+    const radians = (rotate * Math.PI) / 180;
+    const cos = Math.cos(radians);
+    const sin = Math.sin(radians);
 
-      // 3. Il mirino a schermo è un quadrato perfetto di 240px posizionato al centro del contenitore.
-      // Troviamo le coordinate X e Y del mirino relative all'immagine renderizzata a schermo, applicando lo zoom e il drag.
-      const mirinoSizeScreen = 240;
+    // Ruotiamo il vettore di movimento (position.x, position.y)
+    // Questo compensa il fatto che quando l'immagine è ruotata, "su" non è più "su" nativamente.
+    const unrotatedX = position.x * cos + position.y * sin;
+    const unrotatedY = -position.x * sin + position.y * cos;
 
-      // Calcoliamo la porzione visibile a schermo dentro il mirino, considerando lo zoom applicato al centro
-      const sourceWidthScreen = mirinoSizeScreen / zoom;
-      const sourceHeightScreen = mirinoSizeScreen / zoom;
+    // Calcolo dell'area visibile dentro il mirino considerando lo zoom
+    // Usiamo lo spostamento unrotatedX e unrotatedY per puntare alla parte giusta della foto nativa
+    const sW = mirinoSize / zoom;
+    const sH = mirinoSize / zoom;
+    const sX = rWidth / 2 - sW / 2 - unrotatedX / zoom;
+    const sY = rHeight / 2 - sH / 2 - unrotatedY / zoom;
 
-      // Troviamo il centro dell'immagine e applichiamo lo spostamento inverso del drag fatto dall'utente
-      const sourceXScreen =
-        renderedWidth / 2 - sourceWidthScreen / 2 - position.x / zoom;
-      const sourceYScreen =
-        renderedHeight / 2 - sourceHeightScreen / 2 - position.y / zoom;
+    // Applichiamo la rotazione sul centro del canvas per l'output finale
+    ctx.translate(size / 2, size / 2);
+    ctx.rotate(radians);
+    ctx.translate(-size / 2, -size / 2);
 
-      // 4. Convertiamo queste coordinate dello schermo nei pixel reali del file sorgente
-      const sX = sourceXScreen * scaleFactorX;
-      const sY = sourceYScreen * scaleFactorY;
-      const sW = sourceWidthScreen * scaleFactorX;
-      const sH = sourceHeightScreen * scaleFactorY;
+    // Disegniamo il ritaglio sul canvas
+    ctx.drawImage(
+      img,
+      sX * scaleX,
+      sY * scaleY,
+      sW * scaleX,
+      sH * scaleY,
+      0,
+      0,
+      size,
+      size,
+    );
 
-      // 5. Gestione della rotazione mantenendo il perno centrale sul canvas finale
-      ctx.translate(finalSize / 2, finalSize / 2);
-      ctx.rotate((rotate * Math.PI) / 180);
-      ctx.translate(-finalSize / 2, -finalSize / 2);
+    const base64Image = canvas.toDataURL("image/jpeg", 0.95);
 
-      // 6. Ritaglio perfetto: prendiamo la porzione esatta (sX, sY, sW, sH) dal file sorgente
-      // e la stampiamo occupando l'intero spazio del canvas finale (finalSize x finalSize) senza distorsioni
-      ctx.drawImage(
-        img,
-        sX, // Inizio ritaglio X sul file originale
-        sY, // Inizio ritaglio Y sul file originale
-        sW, // Larghezza del ritaglio sul file originale
-        sH, // Altezza del ritaglio sul file originale
-        0, // Destinazione X sul canvas
-        0, // Destinazione Y sul canvas
-        finalSize, // Larghezza finale sul canvas
-        finalSize, // Altezza finale sul canvas
-      );
-
-      const croppedBase64 = canvas.toDataURL("image/jpeg", 0.95);
-
-      if (onSaveImage) {
-        onSaveImage(croppedBase64);
-      }
-    } catch (error) {
-      console.error("Errore durante il ritaglio millimetrico:", error);
+    if (onSaveImage) {
+      onSaveImage(base64Image); // Restituisce l'immagine ritagliata al componente padre
+    } else {
+      console.log("Immagine ritagliata in Base64:", base64Image);
     }
   };
 
   return (
-    <Col md={8} className="mx-auto m-4">
-      <Card className="overflow-hidden shadow-sm">
-        {/* Header */}
+    <Col>
+      <Card>
+        {/* Input file nascosto */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          accept="image/*"
+          className="d-none"
+        />
+
         <div className="d-flex justify-content-between align-items-center p-4 border-bottom border-1 border-muted">
-          <h5 className="mb-0">Modifica foto</h5>
+          <h5>Modifica foto</h5>
           <FontAwesomeIcon
             icon={["fas", "xmark"]}
             className="fs-4"
             style={{ cursor: "pointer" }}
           />
         </div>
-
-        {/* Corpo Editor split-screen */}
-        <div className="d-flex flex-column flex-md-row">
-          {/* COLONNA SINISTRA: Area visiva di Crop */}
-          <div
-            className="overflow-hidden position-relative d-flex align-items-center justify-content-center bg-dark"
-            style={{
-              width: "100%",
-              md: "50%",
-              height: "350px",
-              cursor: isDragging ? "grabbing" : "grab",
-            }}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUpOrLeave}
-            onMouseLeave={handleMouseUpOrLeave}
-          >
-            <img
-              ref={imageRef}
-              src="https://plus.unsplash.com/premium_photo-1731442837021-3929f70e1710?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8c2NattaareUlMjBmb3RvfGVufDB8fDB8fHww"
-              alt="Foto Profilo"
-              crossOrigin="anonymous"
-              draggable="false"
-              style={{
-                objectFit: "cover",
-                width: "100%",
-                height: "100%",
-                transform: `translate(${position.x}px, ${position.y}px) scale(${zoom}) rotate(${rotate}deg)`,
-              }}
-            />
-
-            {/* Mirino tondo da 240px */}
+        <div>
+          <div className="d-flex flex-column flex-md-row">
+            {/* Box dell'immagine di sinistra */}
             <div
-              className="position-absolute border border-2 border-white rounded-circle"
+              ref={containerRef}
+              className="position-relative overflow-hidden bg-dark d-flex align-items-center justify-content-center"
               style={{
-                width: "240px",
-                height: "240px",
-                pointerEvents: "none",
-                boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.6)",
+                width: "350px",
+                height: "350px",
+                cursor: isDragging ? "grabbing" : "grab",
               }}
-            ></div>
-          </div>
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUpOrLeave}
+              onMouseLeave={handleMouseUpOrLeave}
+            >
+              <img
+                ref={imageRef}
+                src={imageSrc}
+                alt="Foto Profilo"
+                className="w-100 h-100"
+                draggable="false"
+                style={{
+                  objectFit: "cover",
+                  transform: `translate(${position.x}px, ${position.y}px) scale(${zoom}) rotate(${rotate}deg)`,
+                  transition: isDragging ? "none" : "transform 0.1s ease-out",
+                }}
+              />
 
-          {/* COLONNA DESTRA: Controlli */}
-          <div
-            className="d-flex flex-column flex-grow-1 bg-white"
-            style={{ md: "50%" }}
-          >
-            <div className="d-flex gap-4 p-3 px-4 border-bottom border-1 border-light fw-bold text-muted">
-              <p
-                className="mb-0 text-primary border-bottom border-2 border-primary pb-2"
-                style={{ cursor: "pointer" }}
-              >
-                Ritaglia
-              </p>
-              <p
-                className="mb-0 pb-2 link-secondary"
-                style={{ cursor: "pointer" }}
-              >
-                Filtro
-              </p>
-              <p
-                className="mb-0 pb-2 link-secondary"
-                style={{ cursor: "pointer" }}
-              >
-                Regola
-              </p>
+              {/* Overlay Maschera Mirino Tondo */}
+              <div
+                className="position-absolute border border-2 border-white rounded-circle"
+                style={{
+                  width: "240px",
+                  height: "240px",
+                  pointerEvents: "none",
+                  boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.6)",
+                }}
+              ></div>
             </div>
 
-            <div className="p-4 flex-grow-1 d-flex flex-column gap-4 justify-content-center">
-              {/* Slider Zoom */}
-              <div>
-                <Form.Label className="text-muted small fw-bold mb-1">
-                  Zoom
-                </Form.Label>
-                <div className="d-flex align-items-center gap-2">
-                  <FontAwesomeIcon
-                    icon={["fas", "minus"]}
-                    className="text-muted small"
-                  />
-                  <Form.Range
-                    min={1}
-                    max={4}
-                    step={0.02}
-                    value={zoom}
-                    onChange={(e) => setZoom(parseFloat(e.target.value))}
-                  />
-                  <FontAwesomeIcon
-                    icon={["fas", "plus"]}
-                    className="text-muted small"
-                  />
-                </div>
+            {/* Box dei controlli di destra */}
+            <div className="flex-grow-1 p-3 bg-white">
+              <div className="d-flex gap-4 p-2 px-5 border-bottom border-1 border-secondary fw-bold text-muted bg-white">
+                <p className="text-primary mb-0" style={{ cursor: "pointer" }}>
+                  Ritaglia
+                </p>
+                <p className="mb-0" style={{ cursor: "pointer" }}>
+                  Filtro
+                </p>
+                <p className="mb-0" style={{ cursor: "pointer" }}>
+                  Regola
+                </p>
               </div>
 
-              {/* Slider Rotazione */}
-              <div>
-                <Form.Label className="text-muted small fw-bold mb-1">
-                  Ruota ({rotate}°)
-                </Form.Label>
-                <div className="d-flex align-items-center gap-2">
-                  <FontAwesomeIcon
-                    icon={["fas", "rotate-left"]}
-                    className="text-muted small"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => setRotate(rotate - 90)}
-                  />
-                  <Form.Range
-                    min={-180}
-                    max={180}
-                    step={1}
-                    value={rotate}
-                    onChange={(e) => setRotate(parseInt(e.target.value))}
-                  />
-                  <FontAwesomeIcon
-                    icon={["fas", "rotate-right"]}
-                    className="text-muted small"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => setRotate(rotate + 90)}
-                  />
+              {/* Controlli di Zoom e Rotazione inseriti qui */}
+              <div className="p-4 d-flex flex-column gap-4 bg-white">
+                {/* Controllo Zoom */}
+                <div>
+                  <Form.Label className="small fw-bold text-muted mb-1">
+                    Zoom
+                  </Form.Label>
+                  <div className="d-flex align-items-center gap-2">
+                    <FontAwesomeIcon
+                      icon={["fas", "minus"]}
+                      className="small text-muted"
+                    />
+                    <Form.Range
+                      min={1}
+                      max={4}
+                      step={0.01}
+                      value={zoom}
+                      onChange={(e) => setZoom(parseFloat(e.target.value))}
+                    />
+                    <FontAwesomeIcon
+                      icon={["fas", "plus"]}
+                      className="small text-muted"
+                    />
+                  </div>
+                </div>
+
+                {/* Controllo Rotazione */}
+                <div>
+                  <Form.Label className="small fw-bold text-muted mb-1">
+                    Rotazione ({rotate}°)
+                  </Form.Label>
+                  <div className="d-flex align-items-center gap-2">
+                    <FontAwesomeIcon
+                      icon={["fas", "rotate-left"]}
+                      className="text-muted"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setRotate((prev) => prev - 90)}
+                    />
+                    <Form.Range
+                      min={-180}
+                      max={180}
+                      step={1}
+                      value={rotate}
+                      onChange={(e) => setRotate(parseInt(e.target.value))}
+                    />
+                    <FontAwesomeIcon
+                      icon={["fas", "rotate-right"]}
+                      className="text-muted"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setRotate((prev) => prev + 90)}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Footer */}
-        <div className="p-3 bg-light border-top border-1 d-flex justify-content-end align-items-center">
-          <Button className="rounded-5 fw-bold py-1 bg-transparent text-dark border-0 shadow-none me-2">
-            <FontAwesomeIcon icon={["fas", "eye"]} /> Chiunque
-          </Button>
-          <Button className="rounded-5 px-4 py-1 fw-bold" onClick={handleApply}>
-            Salva foto
-          </Button>
+          {/* Footer azioni */}
+          <div className="p-2 d-flex justify-content-end align-items-center border-top border-muted bg-light">
+            <Button
+              className="rounded-5 fw-bold py-1 bg-transparent text-black border-0 me-2 shadow-none"
+              onClick={triggerFileInput}
+            >
+              Cambia foto
+            </Button>
+            <Button className="rounded-5 fw-bold py-1 bg-transparent text-black border-0 shadow-none me-2">
+              <FontAwesomeIcon icon={["fas", "eye"]} /> Chiunque
+            </Button>
+            <Button
+              className="rounded-5 px-3 py-1 fw-bold mx-2 btn-primary"
+              onClick={handleSave}
+            >
+              Salva foto
+            </Button>
+          </div>
         </div>
       </Card>
     </Col>
