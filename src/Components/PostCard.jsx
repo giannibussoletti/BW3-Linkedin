@@ -21,10 +21,34 @@ const PostCard = () => {
     setPostText((prev) => prev + emojiData.emoji);
   };
 
-  const handlePost = () => {
-    console.log(postText);
-    setPostText("");
-    handleClose();
+  const handlePost = async () => {
+    try {
+      const response = await fetch(
+        "https://striveschool-api.herokuapp.com/api/posts/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer TU_TOKEN_AQUI",
+          },
+          body: JSON.stringify({
+            text: postText,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Error creating post");
+      }
+
+      const newPost = await response.json();
+      console.log("Post creado:", newPost);
+
+      setPostText("");
+      handleClose();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
