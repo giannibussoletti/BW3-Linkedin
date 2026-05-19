@@ -12,16 +12,31 @@ import PostCard from "./Components/PostCard";
 import SidebarLeft from "./Components/SidebarLeft";
 import ButtonPic from "./Components/ButtonPic";
 import ChangePic from "./Components/ChangePic";
-import ProfileDestination from "./Components/ProfileDestination";
+import { useState } from "react";
+import ProfilePic from "./Components/ProfilePic";
+import ChangeProfilePic from "./Components/ChangeProfilePic";
 
 const App = function () {
+  const [currentCover, setCurrentCover] = useState("");
+  const [currentAvatar, setCurrentAvatar] = useState(
+    "https://picsum.photos/id/1015/600/200",
+  );
+  const handleSaveCover = (newImageBase64) => {
+    setCurrentCover(newImageBase64); // Salva l'immagine ritagliata dal Canvas
+  };
+
+  const handleProfileImageSave = (imageBase64) => {
+    setCurrentAvatar(imageBase64); // Aggiorna la foto profilo in tempo reale
+  };
+
   return (
     <div className="bg-body-secondary">
       <NavbarLinkedin />
       <ButtonPic />
-      <ChangePic />
-      <ProfileDestination />
-      <SidebarLeft />
+      <ChangePic onSaveImage={handleSaveCover} />
+      <ProfilePic />
+      <ChangeProfilePic onSaveImage={handleProfileImageSave} />
+      <SidebarLeft coverImage={currentCover} profileImage={currentAvatar} />
       <PostCard />
     </div>
   );

@@ -9,7 +9,7 @@ const ChangePic = ({ onSaveImage }) => {
 
   const imageRef = useRef(null);
 
-  const aspectRatio = 32 / 4;
+  const aspectRatio = 4 / 1;
 
   const finalWidth = 1200;
   const finalHeight = finalWidth / aspectRatio;
