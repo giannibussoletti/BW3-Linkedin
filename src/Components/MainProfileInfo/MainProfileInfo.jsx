@@ -1,5 +1,5 @@
 import { Container, Row, Col, Image, Button } from "react-bootstrap"
-import { buttonArray } from "./MainProfileInfo"
+import { buttonArray } from "./MainProfileInfoScript"
 
 const MainProfileInfo = () => {
   return (
