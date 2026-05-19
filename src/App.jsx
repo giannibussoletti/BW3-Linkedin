@@ -1,9 +1,9 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap-icons/font/bootstrap-icons.css";
 import NavbarLinkedin from "./Components/navbar/NavbarLinkedin";
 import PostCard from "./Components/PostCard";
 import SidebarLeft from "./Components/SidebarLeft";
 import RightSideBar from "./Components/RightSideBar";
+import FeedPostCard from "./Components/FeedPostCard";
 /* import all the icons in Free Solid, Free Regular, and Brands styles */
 
 library.add(fas, far, fab);
@@ -26,6 +26,7 @@ const App = function () {
           </Col>
           <Col xs={12} md={6} lg={7}>
             <PostCard />
+            <FeedPostCard />
           </Col>
           <Col xs={12} md={3} lg={3}>
             <RightSideBar />
