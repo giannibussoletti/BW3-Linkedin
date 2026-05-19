@@ -1,22 +1,19 @@
 import { Card, Col, Button, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useRef } from "react";
+import AvatarEditor from "react-avatar-editor"; // <-- La nuova libreria pulita
 
 const ChangeProfilePic = ({ onSaveImage }) => {
-  // 1. STATI PER LA GESTIONE IMMAGINE E TRASFORMAZIONI
+  // 1. STATI ESSENZIALI (Niente più stati per drag, coordinate o booleani complessi)
   const [imageSrc, setImageSrc] = useState(
     "https://plus.unsplash.com/premium_photo-1731442837021-3929f70e1710?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8c2NhdHRhcmUlMjBmb3RvfGVufDB8fDB8fHww",
   );
   const [zoom, setZoom] = useState(1);
   const [rotate, setRotate] = useState(0);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
 
   // 2. RIFERIMENTI (REFS)
-  const dragStart = useRef({ x: 0, y: 0 });
-  const imageRef = useRef(null);
   const fileInputRef = useRef(null);
-  const containerRef = useRef(null);
+  const editorRef = useRef(null); // Riferimento fondamentale per estrarre l'immagine
 
   // 3. LOGICA DI CARICAMENTO FILE DA PC
   const handleFileChange = (e) => {
@@ -25,10 +22,9 @@ const ChangeProfilePic = ({ onSaveImage }) => {
       const reader = new FileReader();
       reader.onload = () => {
         setImageSrc(reader.result);
-        // Resetta le trasformazioni quando carichi una nuova foto
+        // Resetta i controlli di zoom e rotazione per il nuovo file
         setZoom(1);
         setRotate(0);
-        setPosition({ x: 0, y: 0 });
       };
       reader.readAsDataURL(file);
     }
@@ -38,104 +34,19 @@ const ChangeProfilePic = ({ onSaveImage }) => {
     fileInputRef.current.click();
   };
 
-  // 4. LOGICA DI TRASCINAMENTO (DRAG & DROP / TRANSLATE)
-  const handleMouseDown = (e) => {
-    e.preventDefault();
-    setIsDragging(true);
-    dragStart.current = {
-      x: e.clientX - position.x,
-      y: e.clientY - position.y,
-    };
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-    setPosition({
-      x: e.clientX - dragStart.current.x,
-      y: e.clientY - dragStart.current.y,
-    });
-  };
-
-  const handleMouseUpOrLeave = () => {
-    setIsDragging(false);
-  };
-
-  // 5. LOGICA DI RITAGLIO E SALVATAGGIO (CANVAS)
+  // 4. LOGICA DI SALVATAGGIO RELEGATA ALLA LIBRERIA
   const handleSave = () => {
-    const img = imageRef.current;
-    const container = containerRef.current;
-    if (!img || !container) return;
+    if (editorRef.current) {
+      // Ottiene il canvas ritagliato, scalato e ruotato alla perfezione dalla libreria
+      const canvas = editorRef.current.getImageScaledToCanvas();
+      // Genera il Base64 a risoluzione ottimale (size 400x400 regolata dai parametri del componente)
+      const base64Image = canvas.toDataURL("image/jpeg", 0.95);
 
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    const size = 400; // Dimensione finale della foto profilo quadrata
-
-    canvas.width = size;
-    canvas.height = size;
-
-    // Calcoliamo le dimensioni renderizzate dell'immagine (object-fit: cover)
-    const containerWidth = container.clientWidth;
-    const containerHeight = container.clientHeight;
-    const imageRatio = img.naturalWidth / img.naturalHeight;
-    const containerRatio = containerWidth / containerHeight;
-
-    let rWidth, rHeight;
-    if (imageRatio > containerRatio) {
-      rHeight = containerHeight;
-      rWidth = containerHeight * imageRatio;
-    } else {
-      rWidth = containerWidth;
-      rHeight = containerWidth / imageRatio;
-    }
-
-    const scaleX = img.naturalWidth / rWidth;
-    const scaleY = img.naturalHeight / rHeight;
-
-    // Il mirino è tondo ed è grande 240px a schermo
-    const mirinoSize = 240;
-
-    // --- CORREZIONE CHIAVE PER MOVIMENTO CORRETTO CON ROTAZIONE ---
-    // Calcoliamo lo spostamento "reale" compensando l'angolo di rotazione
-    const radians = (rotate * Math.PI) / 180;
-    const cos = Math.cos(radians);
-    const sin = Math.sin(radians);
-
-    // Ruotiamo il vettore di movimento (position.x, position.y)
-    // Questo compensa il fatto che quando l'immagine è ruotata, "su" non è più "su" nativamente.
-    const unrotatedX = position.x * cos + position.y * sin;
-    const unrotatedY = -position.x * sin + position.y * cos;
-
-    // Calcolo dell'area visibile dentro il mirino considerando lo zoom
-    // Usiamo lo spostamento unrotatedX e unrotatedY per puntare alla parte giusta della foto nativa
-    const sW = mirinoSize / zoom;
-    const sH = mirinoSize / zoom;
-    const sX = rWidth / 2 - sW / 2 - unrotatedX / zoom;
-    const sY = rHeight / 2 - sH / 2 - unrotatedY / zoom;
-
-    // Applichiamo la rotazione sul centro del canvas per l'output finale
-    ctx.translate(size / 2, size / 2);
-    ctx.rotate(radians);
-    ctx.translate(-size / 2, -size / 2);
-
-    // Disegniamo il ritaglio sul canvas
-    ctx.drawImage(
-      img,
-      sX * scaleX,
-      sY * scaleY,
-      sW * scaleX,
-      sH * scaleY,
-      0,
-      0,
-      size,
-      size,
-    );
-
-    const base64Image = canvas.toDataURL("image/jpeg", 0.95);
-
-    if (onSaveImage) {
-      onSaveImage(base64Image); // Restituisce l'immagine ritagliata al componente padre
-    } else {
-      console.log("Immagine ritagliata in Base64:", base64Image);
+      if (onSaveImage) {
+        onSaveImage(base64Image); // Ritorna l'immagine finale pulita al componente App.jsx
+      } else {
+        console.log("Immagine ritagliata in Base64:", base64Image);
+      }
     }
   };
 
@@ -161,43 +72,26 @@ const ChangeProfilePic = ({ onSaveImage }) => {
         </div>
         <div>
           <div className="d-flex flex-column flex-md-row">
-            {/* Box dell'immagine di sinistra */}
+            {/* Box dell'immagine di sinistra (Gestito nativamente da AvatarEditor) */}
             <div
-              ref={containerRef}
               className="position-relative overflow-hidden bg-dark d-flex align-items-center justify-content-center"
               style={{
                 width: "350px",
                 height: "350px",
-                cursor: isDragging ? "grabbing" : "grab",
               }}
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUpOrLeave}
-              onMouseLeave={handleMouseUpOrLeave}
             >
-              <img
-                ref={imageRef}
-                src={imageSrc}
-                alt="Foto Profilo"
-                className="w-100 h-100"
-                draggable="false"
-                style={{
-                  objectFit: "cover",
-                  transform: `translate(${position.x}px, ${position.y}px) scale(${zoom}) rotate(${rotate}deg)`,
-                  transition: isDragging ? "none" : "transform 0.1s ease-out",
-                }}
+              <AvatarEditor
+                ref={editorRef}
+                image={imageSrc}
+                width={240} // Dimensione interna del mirino
+                height={240}
+                border={55} // Spazio di overlay scuro intorno: (350px totali - 240px mirino) / 2 = 55px
+                borderRadius={120} // Rende il mirino perfettamente tondo (240 / 2)
+                color={[0, 0, 0, 0.6]} // Sfondo oscurato semitrasparente
+                scale={zoom}
+                rotate={rotate}
+                crossOrigin="anonymous" // Previene l'errore Tainted Canvas sui placeholder esterni
               />
-
-              {/* Overlay Maschera Mirino Tondo */}
-              <div
-                className="position-absolute border border-2 border-white rounded-circle"
-                style={{
-                  width: "240px",
-                  height: "240px",
-                  pointerEvents: "none",
-                  boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.6)",
-                }}
-              ></div>
             </div>
 
             {/* Box dei controlli di destra */}
@@ -214,7 +108,7 @@ const ChangeProfilePic = ({ onSaveImage }) => {
                 </p>
               </div>
 
-              {/* Controlli di Zoom e Rotazione inseriti qui */}
+              {/* Controlli di Zoom e Rotazione */}
               <div className="p-4 d-flex flex-column gap-4 bg-white">
                 {/* Controllo Zoom */}
                 <div>
@@ -279,9 +173,7 @@ const ChangeProfilePic = ({ onSaveImage }) => {
             >
               Cambia foto
             </Button>
-            <Button className="rounded-5 fw-bold py-1 bg-transparent text-black border-0 shadow-none me-2">
-              <FontAwesomeIcon icon={["fas", "eye"]} /> Chiunque
-            </Button>
+
             <Button
               className="rounded-5 px-3 py-1 fw-bold mx-2 btn-primary"
               onClick={handleSave}
