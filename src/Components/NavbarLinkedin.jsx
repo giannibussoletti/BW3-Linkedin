@@ -1,6 +1,56 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Container, Navbar, Image, InputGroup, Form, Nav } from "react-bootstrap"
 
+const iconType = "fa-solid "
+const iconSize = "xl"
+const navLinkClass = "py-0 d-flex flex-column justify-content-center align-items-center"
+const pClass = "m-auto"
+
+const navBarobj = [
+  {
+    navLinkClass,
+    icon: iconType + "fa-house",
+    iconSize,
+    pClass,
+    name: "Home",
+  },
+  {
+    navLinkClass,
+    icon: iconType + "fa-house",
+    iconSize,
+    pClass,
+    name: "Home",
+  },
+  {
+    navLinkClass,
+    icon: iconType + "fa-house",
+    iconSize,
+    pClass,
+    name: "Home",
+  },
+  {
+    navLinkClass,
+    icon: iconType + "fa-house",
+    iconSize,
+    pClass,
+    name: "Home",
+  },
+  {
+    navLinkClass,
+    icon: iconType + "fa-house",
+    iconSize,
+    pClass,
+    name: "Home",
+  },
+  {
+    navLinkClass,
+    icon: iconType + "fa-house",
+    iconSize,
+    pClass,
+    name: "Home",
+  },
+]
+
 const NavbarLinkedin = () => {
   return (
     <Container fluid className="bg-light">
@@ -23,11 +73,10 @@ const NavbarLinkedin = () => {
             <Nav.Link className="py-0 d-flex flex-column justify-content-center align-items-center">
               <FontAwesomeIcon size="xl" icon="fa-solid fa-house" /> <p className="m-0">Home</p>
             </Nav.Link>
+
             <Nav.Link className="py-0 d-flex flex-column justify-content-center align-items-center">
               <FontAwesomeIcon size="xl" icon="fa-solid fa-user-group" />
-              <p className="m-0" style={{ whiteSpace: "nowrap" }}>
-                La mia rete
-              </p>
+              <p className="m-0">La mia rete</p>
             </Nav.Link>
             <Nav.Link className="py-0 d-flex flex-column justify-content-center align-items-center">
               <FontAwesomeIcon size="xl" icon="fa-solid fa-briefcase pb-3" />
@@ -41,15 +90,13 @@ const NavbarLinkedin = () => {
               <FontAwesomeIcon size="xl" icon="fa-solid fa-bell" />
               <p className="m-0">Notifiche</p>
             </Nav.Link>
-            <Nav.Link className="py-0 border-end border-2 d-flex flex-column justify-content-center align-items-center">
+            <Nav.Link className="py-0 border-end border-2 d-flex flex-column justify-content-center">
               <Image className="rounded-circle" src="https://placecats.com/30/30" />
-              <p className="m-0">Tu</p>
+              <p className="m-auto">Tu</p>
             </Nav.Link>
             <Nav.Link className="py-0 d-flex flex-column justify-content-center align-items-center">
-              <FontAwesomeIcon size="xl" icon="fa-solid fa-grip-vertical" />{" "}
-              <p className="m-0" style={{ whiteSpace: "nowrap" }}>
-                Per le aziende
-              </p>
+              <FontAwesomeIcon size="xl" icon="fa-solid fa-grip-vertical" />
+              <p className="m-0">Per le aziende</p>
             </Nav.Link>
             <Nav.Link className="py-0 d-flex flex-column justify-content-center align-items-center">
               <p>Prova Premium</p>
