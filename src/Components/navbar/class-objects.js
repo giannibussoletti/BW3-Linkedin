@@ -10,6 +10,7 @@ export const navBarObj = [
     iconSize,
     pClass,
     name: "Home",
+    link: "/",
   },
   {
     navLinkClass,
@@ -17,6 +18,7 @@ export const navBarObj = [
     iconSize,
     pClass,
     name: "La mia rete",
+    link: "",
   },
   {
     navLinkClass,
@@ -24,6 +26,7 @@ export const navBarObj = [
     iconSize,
     pClass,
     name: "Lavoro",
+    link: "",
   },
   {
     navLinkClass,
@@ -31,6 +34,7 @@ export const navBarObj = [
     iconSize,
     pClass,
     name: "Messagistica",
+    link: "",
   },
   {
     navLinkClass,
@@ -38,6 +42,7 @@ export const navBarObj = [
     iconSize,
     pClass,
     name: "Notifiche",
+    link: "",
   },
   {
     navLinkClass,
@@ -45,5 +50,6 @@ export const navBarObj = [
     iconSize,
     pClass,
     name: "Per le aziende",
+    link: "",
   },
 ]
