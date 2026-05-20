@@ -1,13 +1,24 @@
-import { fetchExperiences, createExperience, updateExperience, deleteExperience } from "../actions/actions";
+import {
+  fetchExperiences,
+  createExperience,
+  updateExperience,
+  deleteExperience,
+} from "../actions/actions";
+
+import { SET_COVER_IMAGE, SET_PROFILE_IMAGE } from "../actions/editorPicture";
 
 const initialState = {
-  content: [],      
-  isLoading: false, 
-  error: null,      
+  content: [],
+  isLoading: false,
+  error: null,
+  currentCover:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Place_de_la_Bourse%2C_Bordeaux%2C_France.jpg/1920px-Place_de_la_Bourse%2C_Bordeaux%2C_France.jpg",
+  currentProfile:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Place_de_la_Bourse%2C_Bordeaux%2C_France.jpg/1920px-Place_de_la_Bourse%2C_Bordeaux%2C_France.jpg",
 };
 
 const mainReducer = (state = initialState, action) => {
- switch (action.type) {
+  switch (action.type) {
     case fetchExperiences.pending.type:
     case createExperience.pending.type:
     case updateExperience.pending.type:
@@ -24,14 +35,18 @@ const mainReducer = (state = initialState, action) => {
       return { ...state, isLoading: false, content: action.payload };
 
     case createExperience.fulfilled.type:
-      return { ...state, isLoading: false, content: [...state.content, action.payload] };
+      return {
+        ...state,
+        isLoading: false,
+        content: [...state.content, action.payload],
+      };
 
     case updateExperience.fulfilled.type:
       return {
         ...state,
         isLoading: false,
         content: state.content.map((exp) =>
-          exp._id === action.payload._id ? action.payload : exp
+          exp._id === action.payload._id ? action.payload : exp,
         ),
       };
 
@@ -44,6 +59,17 @@ const mainReducer = (state = initialState, action) => {
 
     default:
       return state;
+
+    case SET_COVER_IMAGE:
+      return {
+        ...state,
+        currentCover: action.payload,
+      };
+    case SET_PROFILE_IMAGE:
+      return {
+        ...state,
+        currentProfile: action.payload,
+      };
   }
 };
 
