@@ -9,34 +9,56 @@ const ChatBox = function () {
   const [minimized, setMinimized] = useState(false);
   const [expandInput, setExpandInput] = useState(false);
 
-  // 🔥 NEW: controllo visibilità messaggi (fix scatto)
   const [showMessages, setShowMessages] = useState(true);
+
+  // 🔥 NEW STATE
+  const [message, setMessage] = useState("");
 
   const handleToggleExpand = () => {
     if (expandInput) {
-      // CHIUSURA
       setExpandInput(false);
 
       setTimeout(() => {
         setShowMessages(true);
-      }, 250); // stessa durata animazione
+      }, 250);
     } else {
-      // APERTURA
       setShowMessages(false);
       setExpandInput(true);
     }
+  };
+
+  const handleMinimize = () => {
+    setMinimized((prev) => {
+      const newValue = !prev;
+
+      if (!prev) {
+        setExpandInput(false);
+      }
+
+      return newValue;
+    });
+  };
+
+  // 🔥 NEW SEND FUNCTION
+  const sendMessage = () => {
+    if (!message.trim()) return;
+
+    console.log("Messaggio inviato:", message);
+
+    setMessage("");
   };
 
   return (
     <>
       {/* LISTA CHAT */}
       <div
-        className="position-fixed bottom-0 end-0 shadow-lg mx-2 d-none d-md-block"
+        className="position-fixed bottom-0 end-0 shadow-lg mx-2 d-none d-md-block "
         style={{
           width: "300px",
           borderRadius: "12px 12px 0 0",
           overflow: "hidden",
           zIndex: 1,
+          marginBottom: "2px",
         }}
       >
         <div
@@ -119,18 +141,18 @@ const ChatBox = function () {
       {/* CHAT GRANDE */}
       {selectedChat && (
         <div
-          className="position-fixed bottom-0 d-none d-md-flex flex-column bg-white shadow-lg"
+          className="position-fixed bottom-0 d-none d-md-flex flex-column bg-white shadow-lg "
           style={{
-            width: minimized ? "450px" : "600px",
-            height: minimized ? "300px" : "600px",
+            width: minimized ? "450px" : "500px",
+            height: minimized ? "300px" : "650px",
             right: "320px",
             borderRadius: "12px 12px 0 0",
             overflow: "hidden",
             zIndex: 1,
             transition: "height 0.25s ease",
+            marginBottom: "2px",
           }}
         >
-          {/* HEADER */}
           <div className="d-flex align-items-center justify-content-between p-3 border-bottom">
             <div className="d-flex align-items-center gap-2">
               <img
@@ -139,7 +161,6 @@ const ChatBox = function () {
                 className="rounded-circle"
                 style={{ width: "40px", height: "40px" }}
               />
-
               <div>
                 <h6 className="m-0">{selectedChat.name}</h6>
                 <small className="text-success">Online</small>
@@ -147,7 +168,8 @@ const ChatBox = function () {
             </div>
 
             <div className="d-flex align-items-center gap-3">
-              <i class="bi bi-three-dots"></i>
+              <i className="bi bi-three-dots"></i>
+
               <i
                 className={`bi ${
                   minimized
@@ -155,7 +177,7 @@ const ChatBox = function () {
                     : "bi-arrows-angle-contract"
                 }`}
                 style={{ cursor: "pointer" }}
-                onClick={() => setMinimized(!minimized)}
+                onClick={handleMinimize}
               ></i>
 
               <i
@@ -166,9 +188,7 @@ const ChatBox = function () {
             </div>
           </div>
 
-          {/* BODY */}
           <div className="d-flex flex-column flex-grow-1">
-            {/* MESSAGGI (FIX SCATTO) */}
             {showMessages && (
               <div className="flex-grow-1 p-3 bg-light overflow-auto">
                 <div className="d-flex justify-content-start mb-2">
@@ -185,18 +205,24 @@ const ChatBox = function () {
               </div>
             )}
 
-            {/* INPUT AREA */}
             <div
-              className="border-top p-2 bg-white d-flex flex-column"
+              className="border-top bg-white d-flex flex-column"
               style={{ flex: 1 }}
             >
-              {/* TEXTAREA + ICONA */}
-              <div className="d-flex align-items-end gap-2 flex-grow-1">
+              <div className="d-flex align-items-center gap-1 mb-1 flex-grow-1 p-3">
                 <textarea
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      sendMessage();
+                    }
+                  }}
                   style={{
                     backgroundColor: "#f4f2ee",
                     resize: "none",
-                    height: expandInput ? "450px" : "100px",
+                    height: expandInput ? "450px" : "140px",
                     flex: 1,
                     transition: "height 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
                   }}
@@ -204,14 +230,17 @@ const ChatBox = function () {
                   placeholder="Scrivi un messaggio..."
                 />
 
-                <i
-                  className={`bi ${
-                    expandInput ? "bi-chevron-down" : "bi-chevron-up"
-                  }`}
-                  style={{ cursor: "pointer", fontSize: "18px" }}
-                  onClick={handleToggleExpand}
-                ></i>
+                {!minimized && (
+                  <i
+                    className={`bi ${
+                      expandInput ? "bi-chevron-down" : "bi-chevron-up"
+                    }`}
+                    style={{ cursor: "pointer", fontSize: "18px" }}
+                    onClick={handleToggleExpand}
+                  ></i>
+                )}
               </div>
+
               <div className="d-flex justify-content-between align-items-center p-2 border-top bg-white">
                 <div className="d-flex align-items-center gap-3">
                   <i className="bi bi-image"></i>
@@ -219,16 +248,18 @@ const ChatBox = function () {
                     style={{ transform: "rotate(45deg)" }}
                     className="bi bi-paperclip"
                   ></i>
-                  <i class="bi bi-emoji-smile-fill"></i>
+                  <i className="bi bi-emoji-smile-fill"></i>
                 </div>
+
                 <div className="d-flex align-items-center gap-2">
                   <button
+                    onClick={sendMessage}
                     style={{ backgroundColor: "#e8e8e8" }}
                     className="btn btn-sm px-2 rounded-5 text-secondary fw-normal "
                   >
                     Invia
                   </button>
-                  <i class="bi bi-three-dots"></i>
+                  <i className="bi bi-three-dots"></i>
                 </div>
               </div>
             </div>
