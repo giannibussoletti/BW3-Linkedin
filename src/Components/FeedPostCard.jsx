@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import Card from "react-bootstrap/Card"
-
 const TokenPaolo =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTBhZDU4NDA2YmJlOTAwMTVkZWU1N2UiLCJpYXQiOjE3NzkwOTQ5MTYsImV4cCI6MTc4MDMwNDUxNn0.76kWBS67r5ygr_d-wqdXMOaMNYRsOUCAvuKafyaiAHA"
 
@@ -8,31 +7,28 @@ const FeedPostCard = () => {
   const [posts, setPosts] = useState([])
   const [commentsByPost, setCommentsByPost] = useState({})
   const [openComments, setOpenComments] = useState({})
-  const [likedPosts, setLikedPosts] = useState({})
+  const [likedPosts, setLikedPosts] = useState([]);
 
   const fetchPosts = async () => {
     try {
-      const response = await fetch(
-        "https://striveschool-api.herokuapp.com/api/posts/",
-        {
-          headers: {
-            Authorization: `Bearer ${TokenPaolo}`,
-          },
+      const response = await fetch("https://striveschool-api.herokuapp.com/api/posts/", {
+        headers: {
+          Authorization: `Bearer ${TokenPaolo}`,
         },
-      )
+      })
 
       const data = await response.json()
 
-      const sortedPosts = data.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
-      )
+      console.log(data)
+      const sortedPosts = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
 
       setPosts(sortedPosts)
+
+      setPosts(data)
     } catch (error) {
       console.log(error)
     }
   }
-
   const fetchComments = async (postId) => {
     try {
       const response = await fetch(
@@ -44,12 +40,7 @@ const FeedPostCard = () => {
         },
       )
 
-      if (!response.ok) {
-        throw new Error("Error cargando comentarios")
-      }
-
       const data = await response.json()
-      console.log("COMENTARIOS:", data)
 
       setCommentsByPost((prev) => ({
         ...prev,
@@ -64,23 +55,13 @@ const FeedPostCard = () => {
       console.log(error)
     }
   }
-
-  const toggleLike = (postId) => {
-    console.log("LIKE CLICK:", postId)
-
-    setLikedPosts((prev) => ({
-      ...prev,
-      [postId]: !prev[postId],
-    }))
-  }
-
   useEffect(() => {
     fetchPosts()
   }, [])
 
   return (
     <>
-      {posts.map((post) => (
+      {posts.slice(0, 10).map((post) => (
         <Card key={post._id} className="w-100 shadow-sm mb-3">
           <Card.Body>
             {/* HEADER */}
@@ -142,66 +123,7 @@ const FeedPostCard = () => {
             
 
             {/* ACTIONS */}
-            
-              <div className="d-flex justify-content-around text-muted">
-                {/* LIKE */}
-                <button
-                  type="button"
-                  onClick={() => toggleLike(post._id)}
-                  style={{
-                    border: "none",
-                    background: "transparent",
-                    cursor: "pointer",
-                    color: likedPosts[post._id] ? "black" : "rgb(74, 85, 101)",
-                  }}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                    role="img"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill={likedPosts[post._id] ? "black" : "none"}
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      d="M6 11.5V21m13.5 0H2v-9.5h4L8.5 3h.9A3.6 3.6 0 0 1 13 6.6V9h9z"
-                    />
-                  </svg>
-                </button>
-
-                {/* COMMENTS */}
-                <button
-                  type="button"
-                  onClick={() => fetchComments(post._id)}
-                  style={{
-                    border: "none",
-                    background: "transparent",
-                    cursor: "pointer",
-                    color: openComments[post._id]
-                      ? "black"
-                      : "rgb(74, 85, 101)",
-                  }}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                    role="img"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="M17 6a2 2 0 1 0 0-4a2 2 0 0 0 0 4m0 1c.35 0 .687-.06 1-.17v5.446c0 1.418-1.164 2.566-2.6 2.566h-4.59l-4.011 2.961a1.01 1.01 0 0 1-1.4-.199a.98.98 0 0 1-.199-.59v-2.172h-.6c-1.436 0-2.6-1.149-2.6-2.566v-6.71C2 4.149 3.164 3 4.6 3h9.57c-.11.313-.17.65-.17 1H4.6C3.704 4 3 4.713 3 5.566v6.71c0 .853.704 1.566 1.6 1.566h1.6V17h.003l.002-.001l4.276-3.157H15.4c.896 0 1.6-.713 1.6-1.566z"
-                    />
-                  </svg>
-                </button>
-              
-
-              {/* REPOST */}
+            <div className="d-flex justify-content-around text-muted">
               <span style={{ cursor: "pointer" }}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -210,17 +132,49 @@ const FeedPostCard = () => {
                   width="20"
                   height="20"
                   viewBox="0 0 24 24"
-                  style={{ color: "rgb(74, 85, 101)" }}
-                >
+                  style={{ color: "rgb(74, 85, 101)" }}>
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    d="M6 11.5V21m13.5 0H2v-9.5h4L8.5 3h.9A3.6 3.6 0 0 1 13 6.6V9h9z"
+                  />
+                </svg>
+              </span>
+              <span style={{ cursor: "pointer" }}>
+                {" "}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                  role="img"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  style={{ color: "rgb(74, 85, 101)" }}>
+                  <path
+                    fill="currentColor"
+                    d="M17 6a2 2 0 1 0 0-4a2 2 0 0 0 0 4m0 1c.35 0 .687-.06 1-.17v5.446c0 1.418-1.164 2.566-2.6 2.566h-4.59l-4.011 2.961a1.01 1.01 0 0 1-1.4-.199a.98.98 0 0 1-.199-.59v-2.172h-.6c-1.436 0-2.6-1.149-2.6-2.566v-6.71C2 4.149 3.164 3 4.6 3h9.57c-.11.313-.17.65-.17 1H4.6C3.704 4 3 4.713 3 5.566v6.71c0 .853.704 1.566 1.6 1.566h1.6V17h.003l.002-.001l4.276-3.157H15.4c.896 0 1.6-.713 1.6-1.566z"
+                  />
+                </svg>
+              </span>
+              <span style={{ cursor: "pointer" }}>
+                {" "}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                  role="img"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  style={{ color: "rgb(74, 85, 101)" }}>
                   <path
                     fill="currentColor"
                     d="M19 7a1 1 0 0 0-1-1h-8v2h7v5h-3l3.969 5L22 13h-3zM5 17a1 1 0 0 0 1 1h8v-2H7v-5h3L6 6l-4 5h3z"
                   />
                 </svg>
               </span>
-
-              {/* SEND */}
               <span style={{ cursor: "pointer" }}>
+                {" "}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   aria-hidden="true"
@@ -228,8 +182,7 @@ const FeedPostCard = () => {
                   width="20"
                   height="20"
                   viewBox="0 0 24 24"
-                  style={{ color: "rgb(74, 85, 101)" }}
-                >
+                  style={{ color: "rgb(74, 85, 101)" }}>
                   <path
                     fill="currentColor"
                     fillRule="evenodd"
