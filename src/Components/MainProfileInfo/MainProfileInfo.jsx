@@ -1,10 +1,17 @@
 import { Container, Row, Col, Image, Button } from "react-bootstrap";
 import { buttonArray } from "./MainProfileInfoScript";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { OPEN_PROFILE_MODAL, OPEN_COVER_MODAL } from "../redux/reducers/index";
+import ProfilePic from "../ProfileEditor";
+import ChangeProfilePic from "../ChangeProfilePic";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ChangeCoverPic from "../../ChangeCoverPic";
 
 const MainProfileInfo = () => {
   const currentCover = useSelector((state) => state.currentCover);
   const profileImage = useSelector((state) => state.currentProfile);
+  const dispatch = useDispatch();
+
   return (
     <Container fluid className="p-0 bg-white mb-3 rounded-3 shadow-sm">
       <Row className="m-0">
@@ -20,14 +27,29 @@ const MainProfileInfo = () => {
         <Col xs={12} style={{ height: "75px" }} className="position-relative">
           <div
             className=" position-absolute border-4 border-light border rounded-circle"
-            style={{ top: "-50%", transform: "translateY(-50%)" }}
+            style={{
+              top: "-50%",
+              transform: "translateY(-50%)",
+              cursor: "pointer",
+            }}
           >
             <Image
               className="rounded-circle"
               src={profileImage}
               style={{ height: "152px", width: "152px", objectFit: "cover" }}
+              onClick={() => dispatch({ type: OPEN_PROFILE_MODAL })}
             />
           </div>
+          <FontAwesomeIcon
+            icon={["fas", "pen"]}
+            className="fs-6 position-absolute bg-light rounded-circle px-2 py-2 text-primary"
+            style={{
+              top: "-200",
+              right: "15px",
+              cursor: "pointer",
+            }}
+            onClick={() => dispatch({ type: OPEN_COVER_MODAL })}
+          />
         </Col>
         <Col xs={12} md={8}>
           <h3 className="fw-semibold">Gianni Bussoletti</h3>
@@ -75,6 +97,9 @@ const MainProfileInfo = () => {
           </div>
         </Col>
       </Row>
+      <ProfilePic />
+      <ChangeProfilePic />
+      <ChangeCoverPic />
     </Container>
   );
 };

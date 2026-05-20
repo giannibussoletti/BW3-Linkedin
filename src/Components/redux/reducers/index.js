@@ -6,6 +6,13 @@ import {
 } from "../actions/actions";
 
 import { SET_COVER_IMAGE, SET_PROFILE_IMAGE } from "../actions/editorPicture";
+export const OPEN_PROFILE_MODAL = "OPEN_PROFILE_MODAL";
+export const CLOSE_PROFILE_MODAL = "CLOSE_PROFILE_MODAL";
+export const OPEN_EDIT_MODAL = "OPEN_EDIT_MODAL";
+export const CLOSE_EDIT_MODAL = "CLOSE_EDIT_MODAL";
+
+export const OPEN_COVER_MODAL = "OPEN_COVER_MODAL";
+export const CLOSE_COVER_MODAL = "CLOSE_COVER_MODAL";
 
 const initialState = {
   content: [],
@@ -15,6 +22,9 @@ const initialState = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Place_de_la_Bourse%2C_Bordeaux%2C_France.jpg/1920px-Place_de_la_Bourse%2C_Bordeaux%2C_France.jpg",
   currentProfile:
     "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Place_de_la_Bourse%2C_Bordeaux%2C_France.jpg/1920px-Place_de_la_Bourse%2C_Bordeaux%2C_France.jpg",
+  isProfileModalOpen: false,
+  isEditorPicModalOpen: false,
+  isCoverModalOpen: false,
 };
 
 const mainReducer = (state = initialState, action) => {
@@ -56,10 +66,6 @@ const mainReducer = (state = initialState, action) => {
         isLoading: false,
         content: state.content.filter((exp) => exp._id !== action.payload),
       };
-
-    default:
-      return state;
-
     case SET_COVER_IMAGE:
       return {
         ...state,
@@ -70,6 +76,45 @@ const mainReducer = (state = initialState, action) => {
         ...state,
         currentProfile: action.payload,
       };
+
+    case OPEN_PROFILE_MODAL:
+      return {
+        ...state,
+        isProfileModalOpen: true,
+      };
+
+    case CLOSE_PROFILE_MODAL:
+      return {
+        ...state,
+        isProfileModalOpen: false,
+      };
+
+    case OPEN_EDIT_MODAL:
+      return {
+        ...state,
+        isEditorPicModalOpen: true,
+      };
+
+    case CLOSE_EDIT_MODAL:
+      return {
+        ...state,
+        isEditorPicModalOpen: false,
+      };
+
+    case OPEN_COVER_MODAL:
+      return {
+        ...state,
+        isCoverModalOpen: true,
+      };
+
+    case CLOSE_COVER_MODAL:
+      return {
+        ...state,
+        isCoverModalOpen: false,
+      };
+
+    default:
+      return state;
   }
 };
 

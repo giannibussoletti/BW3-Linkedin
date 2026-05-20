@@ -1,12 +1,14 @@
-import { Col, Card, Form, Button } from "react-bootstrap";
+import { Card, Form, Button, Modal } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useRef } from "react";
 import AvatarEditor from "react-avatar-editor";
 import { useDispatch, useSelector } from "react-redux";
-import { setCoverImage } from "./redux/actions/editorPicture";
+import { setCoverImage } from "./Components/redux/actions/editorPicture";
+import { CLOSE_COVER_MODAL } from "./Components/redux/reducers/index";
 
-const ChangePic = () => {
+const ChangeCoverPic = () => {
   const dispatch = useDispatch();
+  const show = useSelector((state) => state.isCoverModalOpen);
 
   const currentCover = useSelector((state) => state.currentCover);
   const [imageSrc, setImageSrc] = useState(currentCover);
@@ -19,6 +21,10 @@ const ChangePic = () => {
 
   const finalWidth = 1200;
   const finalHeight = 300;
+
+  const handleClose = () => {
+    dispatch({ type: CLOSE_COVER_MODAL });
+  };
 
   // CARICAMENTO NUOVA IMMAGINE
   const handleFileChange = (e) => {
@@ -59,6 +65,7 @@ const ChangePic = () => {
         const croppedBase64 = finalCanvas.toDataURL("image/jpeg", 0.95);
 
         dispatch(setCoverImage(croppedBase64));
+        handleClose();
       } catch (error) {
         console.error("Errore durante il ritaglio della copertina:", error);
       }
@@ -66,7 +73,13 @@ const ChangePic = () => {
   };
 
   return (
-    <Col className="m-5">
+    <Modal
+      centered
+      size="lg"
+      show={show}
+      onHide={handleClose}
+      contentClassName="bg-transparent border-0"
+    >
       <Card className="position-relative shadow-sm overflow-hidden">
         <input
           type="file"
@@ -82,6 +95,7 @@ const ChangePic = () => {
             icon={["fas", "xmark"]}
             className="fs-4"
             style={{ cursor: "pointer" }}
+            onClick={handleClose}
           />
         </div>
 
@@ -193,8 +207,8 @@ const ChangePic = () => {
           </div>
         </div>
       </Card>
-    </Col>
+    </Modal>
   );
 };
 
-export default ChangePic;
+export default ChangeCoverPic;
