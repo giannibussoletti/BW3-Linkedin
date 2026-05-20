@@ -5,13 +5,9 @@ const today = new Date().toLocaleDateString("it-IT");
 const ChatBox = function () {
   const [open, setOpen] = useState(false);
   const [selectedChat, setSelectedChat] = useState(null);
-
   const [minimized, setMinimized] = useState(false);
   const [expandInput, setExpandInput] = useState(false);
-
   const [showMessages, setShowMessages] = useState(true);
-
-  // 🔥 NEW STATE
   const [message, setMessage] = useState("");
 
   const handleToggleExpand = () => {
@@ -26,7 +22,6 @@ const ChatBox = function () {
       setExpandInput(true);
     }
   };
-
   const handleMinimize = () => {
     setMinimized((prev) => {
       const newValue = !prev;
@@ -39,7 +34,6 @@ const ChatBox = function () {
     });
   };
 
-  // 🔥 NEW SEND FUNCTION
   const sendMessage = () => {
     if (!message.trim()) return;
 
@@ -50,7 +44,6 @@ const ChatBox = function () {
 
   return (
     <>
-      {/* LISTA CHAT */}
       <div
         className="position-fixed bottom-0 end-0 shadow-lg mx-2 d-none d-md-block "
         style={{
@@ -75,7 +68,6 @@ const ChatBox = function () {
             />
             <p className="fw-semibold small m-0 p-0">Messaggistica</p>
           </div>
-
           <div className="d-flex gap-3 text-dark px-2">
             <i className="bi bi-three-dots"></i>
             <i className="bi bi-pencil-square"></i>
@@ -84,7 +76,6 @@ const ChatBox = function () {
             ></i>
           </div>
         </div>
-
         <div
           className="bg-white border-start border-end border-bottom d-flex flex-column"
           style={{
@@ -104,7 +95,6 @@ const ChatBox = function () {
               <i className="bi bi-sliders text-secondary"></i>
             </div>
           </div>
-
           <div className="list-group flex-grow-1 overflow-auto">
             <div
               onClick={() =>
@@ -137,8 +127,6 @@ const ChatBox = function () {
           </div>
         </div>
       </div>
-
-      {/* CHAT GRANDE */}
       {selectedChat && (
         <div
           className="position-fixed bottom-0 d-none d-md-flex flex-column bg-white shadow-lg "
@@ -166,10 +154,8 @@ const ChatBox = function () {
                 <small className="text-success">Online</small>
               </div>
             </div>
-
             <div className="d-flex align-items-center gap-3">
               <i className="bi bi-three-dots"></i>
-
               <i
                 className={`bi ${
                   minimized
@@ -179,7 +165,6 @@ const ChatBox = function () {
                 style={{ cursor: "pointer" }}
                 onClick={handleMinimize}
               ></i>
-
               <i
                 className="bi bi-x-lg"
                 style={{ cursor: "pointer" }}
@@ -187,7 +172,6 @@ const ChatBox = function () {
               ></i>
             </div>
           </div>
-
           <div className="d-flex flex-column flex-grow-1">
             {showMessages && (
               <div className="flex-grow-1 p-3 bg-light overflow-auto">
@@ -196,7 +180,6 @@ const ChatBox = function () {
                     Ciao 👋
                   </p>
                 </div>
-
                 <div className="d-flex justify-content-end mb-2">
                   <p className="bg-light p-2 rounded shadow-sm m-0">
                     Tutto bene?
@@ -204,7 +187,6 @@ const ChatBox = function () {
                 </div>
               </div>
             )}
-
             <div
               className="border-top bg-white d-flex flex-column"
               style={{ flex: 1 }}
@@ -229,7 +211,6 @@ const ChatBox = function () {
                   className="form-control border-0 shadow-none pt-2"
                   placeholder="Scrivi un messaggio..."
                 />
-
                 {!minimized && (
                   <i
                     className={`bi ${
@@ -240,7 +221,6 @@ const ChatBox = function () {
                   ></i>
                 )}
               </div>
-
               <div className="d-flex justify-content-between align-items-center p-2 border-top bg-white">
                 <div className="d-flex align-items-center gap-3">
                   <i className="bi bi-image"></i>
