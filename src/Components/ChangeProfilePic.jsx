@@ -1,21 +1,24 @@
 import { Card, Col, Button, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useRef } from "react";
-import AvatarEditor from "react-avatar-editor"; // <-- La nuova libreria pulita
+import AvatarEditor from "react-avatar-editor";
+import { useDispatch, useSelector } from "react-redux";
+import { setProfileImage } from "./redux/actions/editorPicture";
 
-const ChangeProfilePic = ({ onSaveImage }) => {
-  // 1. STATI ESSENZIALI (Niente più stati per drag, coordinate o booleani complessi)
-  const [imageSrc, setImageSrc] = useState(
-    "https://plus.unsplash.com/premium_photo-1731442837021-3929f70e1710?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8c2NhdHRhcmUlMjBmb3RvfGVufDB8fDB8fHww",
-  );
+const ChangeProfilePic = () => {
+  const dispatch = useDispatch();
+
+  const currentProfile = useSelector((state) => state.currentProfile);
+
+  const [imageSrc, setImageSrc] = useState(currentProfile || "");
+
   const [zoom, setZoom] = useState(1);
   const [rotate, setRotate] = useState(0);
 
-  // 2. RIFERIMENTI (REFS)
   const fileInputRef = useRef(null);
-  const editorRef = useRef(null); // Riferimento fondamentale per estrarre l'immagine
+  const editorRef = useRef(null); // Riferimento per estrarre l'immagine
 
-  // 3. LOGICA DI CARICAMENTO FILE DA PC
+  // CARICAMENTO FILE DA PC
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
@@ -34,26 +37,20 @@ const ChangeProfilePic = ({ onSaveImage }) => {
     fileInputRef.current.click();
   };
 
-  // 4. LOGICA DI SALVATAGGIO RELEGATA ALLA LIBRERIA
+  // LOGICA DI SALVATAGGIO
   const handleSave = () => {
     if (editorRef.current) {
-      // Ottiene il canvas ritagliato, scalato e ruotato alla perfezione dalla libreria
       const canvas = editorRef.current.getImageScaledToCanvas();
-      // Genera il Base64 a risoluzione ottimale (size 400x400 regolata dai parametri del componente)
+      // Genera il Base64
       const base64Image = canvas.toDataURL("image/jpeg", 0.95);
 
-      if (onSaveImage) {
-        onSaveImage(base64Image); // Ritorna l'immagine finale pulita al componente App.jsx
-      } else {
-        console.log("Immagine ritagliata in Base64:", base64Image);
-      }
+      dispatch(setProfileImage(base64Image));
     }
   };
 
   return (
     <Col>
       <Card>
-        {/* Input file nascosto */}
         <input
           type="file"
           ref={fileInputRef}
@@ -72,7 +69,6 @@ const ChangeProfilePic = ({ onSaveImage }) => {
         </div>
         <div>
           <div className="d-flex flex-column flex-md-row">
-            {/* Box dell'immagine di sinistra (Gestito nativamente da AvatarEditor) */}
             <div
               className="position-relative overflow-hidden bg-dark d-flex align-items-center justify-content-center"
               style={{
@@ -85,16 +81,16 @@ const ChangeProfilePic = ({ onSaveImage }) => {
                 image={imageSrc}
                 width={240} // Dimensione interna del mirino
                 height={240}
-                border={55} // Spazio di overlay scuro intorno: (350px totali - 240px mirino) / 2 = 55px
-                borderRadius={120} // Rende il mirino perfettamente tondo (240 / 2)
-                color={[0, 0, 0, 0.6]} // Sfondo oscurato semitrasparente
+                border={55} // Spazio scuro intorno
+                borderRadius={120} // Rende il mirino tondo
+                color={[0, 0, 0, 0.6]}
                 scale={zoom}
                 rotate={rotate}
                 crossOrigin="anonymous" // Previene l'errore Tainted Canvas sui placeholder esterni
               />
             </div>
 
-            {/* Box dei controlli di destra */}
+            {/* Controlli finti */}
             <div className="flex-grow-1 p-3 bg-white">
               <div className="d-flex gap-4 p-2 px-5 border-bottom border-1 border-secondary fw-bold text-muted bg-white">
                 <p className="text-primary mb-0" style={{ cursor: "pointer" }}>
@@ -165,7 +161,7 @@ const ChangeProfilePic = ({ onSaveImage }) => {
             </div>
           </div>
 
-          {/* Footer azioni */}
+          {/* Bottoni */}
           <div className="p-2 d-flex justify-content-end align-items-center border-top border-muted bg-light">
             <Button
               className="rounded-5 fw-bold py-1 bg-transparent text-black border-0 me-2 shadow-none"
