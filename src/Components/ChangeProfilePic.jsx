@@ -1,12 +1,14 @@
-import { Card, Col, Button, Form } from "react-bootstrap";
+import { Card, Modal, Button, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useRef } from "react";
 import AvatarEditor from "react-avatar-editor";
 import { useDispatch, useSelector } from "react-redux";
 import { setProfileImage } from "./redux/actions/editorPicture";
+import { CLOSE_EDIT_MODAL } from "./redux/reducers/index";
 
 const ChangeProfilePic = () => {
   const dispatch = useDispatch();
+  const show = useSelector((state) => state.isEditorPicModalOpen);
 
   const currentProfile = useSelector((state) => state.currentProfile);
 
@@ -45,11 +47,17 @@ const ChangeProfilePic = () => {
       const base64Image = canvas.toDataURL("image/jpeg", 0.95);
 
       dispatch(setProfileImage(base64Image));
+      dispatch({ type: CLOSE_EDIT_MODAL });
     }
   };
 
   return (
-    <Col>
+    <Modal
+      size="lg"
+      show={show}
+      onHide={() => dispatch({ type: CLOSE_EDIT_MODAL })}
+      centered
+    >
       <Card>
         <input
           type="file"
@@ -65,6 +73,7 @@ const ChangeProfilePic = () => {
             icon={["fas", "xmark"]}
             className="fs-4"
             style={{ cursor: "pointer" }}
+            onClick={() => dispatch({ type: CLOSE_EDIT_MODAL })}
           />
         </div>
         <div>
@@ -179,7 +188,7 @@ const ChangeProfilePic = () => {
           </div>
         </div>
       </Card>
-    </Col>
+    </Modal>
   );
 };
 
