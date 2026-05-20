@@ -2,18 +2,12 @@ import { useEffect, useState } from "react"
 import Card from "react-bootstrap/Card"
 const TokenPaolo =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTBhZDU4NDA2YmJlOTAwMTVkZWU1N2UiLCJpYXQiOjE3NzkwOTQ5MTYsImV4cCI6MTc4MDMwNDUxNn0.76kWBS67r5ygr_d-wqdXMOaMNYRsOUCAvuKafyaiAHA"
-<<<<<<< Updated upstream
-
-const FeedPostCard = () => {
-  const [posts, setPosts] = useState([])
-=======
 
 
 const FeedPostCard = () => {
   const [posts, setPosts] = useState([])
 const [commentsByPost, setCommentsByPost] = useState({})
 const [openComments, setOpenComments] = useState({})
->>>>>>> Stashed changes
 
   const fetchPosts = async () => {
     try {
@@ -21,15 +15,6 @@ const [openComments, setOpenComments] = useState({})
         headers: {
           Authorization: `Bearer ${TokenPaolo}`,
         },
-<<<<<<< Updated upstream
-      })
-
-      const data = await response.json()
-
-      const sortedPosts = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-
-      setPosts(sortedPosts)
-=======
       )
 
       const data = await response.json()
@@ -42,13 +27,10 @@ const [openComments, setOpenComments] = useState({})
       setPosts(sortedPosts)
 
       setPosts(data)
->>>>>>> Stashed changes
     } catch (error) {
       console.log(error)
     }
   }
-<<<<<<< Updated upstream
-=======
   const fetchComments = async postId => {
   try {
     const response = await fetch(
@@ -59,7 +41,6 @@ const [openComments, setOpenComments] = useState({})
         },
       },
     )
->>>>>>> Stashed changes
 
     const data = await response.json()
 
@@ -77,10 +58,6 @@ const [openComments, setOpenComments] = useState({})
   }
 }
   useEffect(() => {
-<<<<<<< Updated upstream
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-=======
->>>>>>> Stashed changes
     fetchPosts()
   }, [])
 
