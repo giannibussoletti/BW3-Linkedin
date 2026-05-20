@@ -24,6 +24,7 @@ const App = function () {
             <SidebarLeft xs={12} md={2} />
           </Col>
           <Col xs={12} md={6} lg={7}>
+         
             <PostCard />
             <FeedPostCard />
           </Col>

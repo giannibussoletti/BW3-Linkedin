@@ -1,55 +1,101 @@
-import { useState } from "react";
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Card from "react-bootstrap/Card";
-import EmojiPicker from "emoji-picker-react";
+import { useState } from "react"
+import Modal from "react-bootstrap/Modal"
+import Button from "react-bootstrap/Button"
+import Form from "react-bootstrap/Form"
+import Card from "react-bootstrap/Card"
+import EmojiPicker from "emoji-picker-react"
+
+const TokenPaolo =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTBhZDU4NDA2YmJlOTAwMTVkZWU1N2UiLCJpYXQiOjE3NzkwOTQ5MTYsImV4cCI6MTc4MDMwNDUxNn0.76kWBS67r5ygr_d-wqdXMOaMNYRsOUCAvuKafyaiAHA"
 
 const PostCard = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [postText, setPostText] = useState("");
-  const [showPicker, setShowPicker] = useState(false);
+  const [showModal, setShowModal] = useState(false)
+  const [postText, setPostText] = useState("")
+  const [showPicker, setShowPicker] = useState(false)
+  const [selectedImage, setSelectedImage] = useState(null)
+  const [imagePreview, setImagePreview] = useState(null)
 
   const handleClose = () => {
-    setShowModal(false);
-    setShowPicker(false);
-  };
+    setShowModal(false)
+    setShowPicker(false)
+    setPostText("")
+    setSelectedImage(null)
+    setImagePreview(null)
+  }
 
-  const handleShow = () => setShowModal(true);
+  const handleShow = () => setShowModal(true)
 
-  const handleEmojiClick = (emojiData) => {
-    setPostText((prev) => prev + emojiData.emoji);
-  };
+  const handleEmojiClick = emojiData => {
+    setPostText(prev => prev + emojiData.emoji)
+  }
+
+  const handleImageChange = e => {
+    const file = e.target.files[0]
+
+    if (file) {
+      setSelectedImage(file)
+      setImagePreview(URL.createObjectURL(file))
+    }
+  }
 
   const handlePost = async () => {
-    try {
-      const response = await fetch(
-        "https://striveschool-api.herokuapp.com/api/posts/",
+  try {
+    if (!postText.trim() && !selectedImage) {
+      alert("Escribe algo o selecciona una imagen")
+      return
+    }
+
+    const response = await fetch(
+      "https://striveschool-api.herokuapp.com/api/posts/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${TokenPaolo}`,
+        },
+        body: JSON.stringify({
+          text: postText || " ",
+        }),
+      },
+    )
+
+    const data = await response.json()
+    console.log("RESPUESTA POST:", data)
+
+    if (!response.ok) {
+      throw new Error(data.message || "Error creando el post")
+    }
+
+    if (selectedImage) {
+      const formData = new FormData()
+      formData.append("post", selectedImage)
+
+      const imageResponse = await fetch(
+        `https://striveschool-api.herokuapp.com/api/posts/${data._id}`,
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer TU_TOKEN_AQUI",
+            Authorization: `Bearer ${TokenPaolo}`,
           },
-          body: JSON.stringify({
-            text: postText,
-          }),
+          body: formData,
         },
-      );
+      )
 
-      if (!response.ok) {
-        throw new Error("Error creating post");
+      const imageData = await imageResponse.json()
+      console.log("RESPUESTA IMAGEN:", imageData)
+
+      if (!imageResponse.ok) {
+        throw new Error(imageData.message || "Error subiendo imagen")
       }
-
-      const newPost = await response.json();
-      console.log("Post creado:", newPost);
-
-      setPostText("");
-      handleClose();
-    } catch (error) {
-      console.log(error);
     }
-  };
+
+    alert("Post creado correctamente")
+    handleClose()
+  } catch (error) {
+    console.log("ERROR:", error)
+    alert(error.message)
+  }
+}
 
   return (
     <>
@@ -138,7 +184,7 @@ const PostCard = () => {
         <Modal.Header closeButton>
           <Card.Img
             style={{ margin: "1vw", width: "5vw", borderRadius: 20 }}
-            className="m-1 w-3 rounded "
+            className="m-1 w-3 rounded"
             variant="left"
             src="./mockup/user1.png"
           />
@@ -151,8 +197,21 @@ const PostCard = () => {
             rows={10}
             placeholder="What do you want to talk about?"
             value={postText}
-            onChange={(e) => setPostText(e.target.value)}
+            onChange={e => setPostText(e.target.value)}
           />
+
+          {imagePreview && (
+            <img
+              src={imagePreview}
+              alt="preview"
+              className="w-100 rounded mt-3"
+              style={{
+                maxHeight: "300px",
+                objectFit: "cover",
+              }}
+            />
+          )}
+
           <Button
             className="mt-3"
             variant=""
@@ -177,11 +236,8 @@ const PostCard = () => {
                   strokeLinejoin="round"
                   strokeWidth="1.5"
                 />
-
                 <circle cx="9" cy="9.5" r="1.25" fill="currentColor" />
-
                 <circle cx="15" cy="9.5" r="1.25" fill="currentColor" />
-
                 <path
                   stroke="currentColor"
                   strokeLinecap="round"
@@ -192,13 +248,27 @@ const PostCard = () => {
               </g>
             </svg>
           </Button>
+
           {showPicker && (
             <div className="mt-3">
               <EmojiPicker onEmojiClick={handleEmojiClick} />
             </div>
           )}
-           <section>
-            <Button className="mt-3" variant="">
+
+          <section>
+            <Form.Control
+              type="file"
+              accept="image/*"
+              id="image-upload"
+              className="d-none"
+              onChange={handleImageChange}
+            />
+
+            <Button
+              className="mt-3"
+              variant=""
+              onClick={() => document.getElementById("image-upload").click()}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 aria-hidden="true"
@@ -210,11 +280,11 @@ const PostCard = () => {
               >
                 <g fill="currentColor" fillRule="evenodd" clipRule="evenodd">
                   <path d="M7 7a3 3 0 1 0 0 6a3 3 0 0 0 0-6m-1 3a1 1 0 1 1 2 0a1 1 0 0 1-2 0" />
-
                   <path d="M3 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h18a3 3 0 0 0 3-3V6a3 3 0 0 0-3-3zm18 2H3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h4.314l6.878-6.879a3 3 0 0 1 4.243 0L22 15.686V6a1 1 0 0 0-1-1m0 14H10.142l5.465-5.464a1 1 0 0 1 1.414 0l4.886 4.886A1 1 0 0 1 21 19" />
                 </g>
               </svg>
             </Button>
+
             <Button className="mt-3" variant="">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -232,6 +302,7 @@ const PostCard = () => {
                 />
               </svg>
             </Button>
+
             <Button className="mt-3" variant="">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -248,6 +319,7 @@ const PostCard = () => {
                 />
               </svg>
             </Button>
+
             <Button className="mt-3" variant="">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -285,13 +357,13 @@ const PostCard = () => {
             </svg>
           </Button>
 
-          <Button variant="primary" onClick={handlePost}>
-            Post
-          </Button>
+         <Button variant="primary" onClick={handlePost}>
+  Post
+</Button>
         </Modal.Footer>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default PostCard;
+export default PostCard
