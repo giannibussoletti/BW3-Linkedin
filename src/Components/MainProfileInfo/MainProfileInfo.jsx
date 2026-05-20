@@ -33,7 +33,11 @@ const MainProfileInfo = () => {
           <div className="d-flex gap-2 mb-4 flex-wrap">
             {buttonArray.map((button) => {
               return (
-                <Button style={button.style} variant={button.variant} className={button.classes}>
+                <Button
+                  key={button.variant + button.name}
+                  style={button.style}
+                  variant={button.variant}
+                  className={button.classes}>
                   {button.name}
                 </Button>
               )
