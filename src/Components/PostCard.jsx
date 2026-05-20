@@ -1,55 +1,101 @@
-import { useState } from "react";
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Card from "react-bootstrap/Card";
-import EmojiPicker from "emoji-picker-react";
+import { useState } from "react"
+import Modal from "react-bootstrap/Modal"
+import Button from "react-bootstrap/Button"
+import Form from "react-bootstrap/Form"
+import Card from "react-bootstrap/Card"
+import EmojiPicker from "emoji-picker-react"
+
+const TokenPaolo =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTBhZDU4NDA2YmJlOTAwMTVkZWU1N2UiLCJpYXQiOjE3NzkwOTQ5MTYsImV4cCI6MTc4MDMwNDUxNn0.76kWBS67r5ygr_d-wqdXMOaMNYRsOUCAvuKafyaiAHA"
 
 const PostCard = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [postText, setPostText] = useState("");
-  const [showPicker, setShowPicker] = useState(false);
+  const [showModal, setShowModal] = useState(false)
+  const [postText, setPostText] = useState("")
+  const [showPicker, setShowPicker] = useState(false)
+  const [selectedImage, setSelectedImage] = useState(null)
+  const [imagePreview, setImagePreview] = useState(null)
 
   const handleClose = () => {
-    setShowModal(false);
-    setShowPicker(false);
-  };
+    setShowModal(false)
+    setShowPicker(false)
+    setPostText("")
+    setSelectedImage(null)
+    setImagePreview(null)
+  }
 
-  const handleShow = () => setShowModal(true);
+  const handleShow = () => setShowModal(true)
 
-  const handleEmojiClick = (emojiData) => {
-    setPostText((prev) => prev + emojiData.emoji);
-  };
+  const handleEmojiClick = emojiData => {
+    setPostText(prev => prev + emojiData.emoji)
+  }
+
+  const handleImageChange = e => {
+    const file = e.target.files[0]
+
+    if (file) {
+      setSelectedImage(file)
+      setImagePreview(URL.createObjectURL(file))
+    }
+  }
 
   const handlePost = async () => {
-    try {
-      const response = await fetch(
-        "https://striveschool-api.herokuapp.com/api/posts/",
+  try {
+    if (!postText.trim() && !selectedImage) {
+      alert("Escribe algo o selecciona una imagen")
+      return
+    }
+
+    const response = await fetch(
+      "https://striveschool-api.herokuapp.com/api/posts/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${TokenPaolo}`,
+        },
+        body: JSON.stringify({
+          text: postText || " ",
+        }),
+      },
+    )
+
+    const data = await response.json()
+    console.log("RESPUESTA POST:", data)
+
+    if (!response.ok) {
+      throw new Error(data.message || "Error creando el post")
+    }
+
+    if (selectedImage) {
+      const formData = new FormData()
+      formData.append("post", selectedImage)
+
+      const imageResponse = await fetch(
+        `https://striveschool-api.herokuapp.com/api/posts/${data._id}`,
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer TU_TOKEN_AQUI",
+            Authorization: `Bearer ${TokenPaolo}`,
           },
-          body: JSON.stringify({
-            text: postText,
-          }),
+          body: formData,
         },
-      );
+      )
 
-      if (!response.ok) {
-        throw new Error("Error creating post");
+      const imageData = await imageResponse.json()
+      console.log("RESPUESTA IMAGEN:", imageData)
+
+      if (!imageResponse.ok) {
+        throw new Error(imageData.message || "Error subiendo imagen")
       }
-
-      const newPost = await response.json();
-      console.log("Post creado:", newPost);
-
-      setPostText("");
-      handleClose();
-    } catch (error) {
-      console.log(error);
     }
-  };
+
+    alert("Post creado correctamente")
+    handleClose()
+  } catch (error) {
+    console.log("ERROR:", error)
+    alert(error.message)
+  }
+}
 
   return (
     <>
@@ -134,7 +180,7 @@ const PostCard = () => {
         </section>
       </Card>
 
-      <Modal show={showModal} onHide={handleClose} centered size="lg">
+      <Modal show={showModal} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <div className="d-flex align-items-center gap-2">
             <img
@@ -154,11 +200,10 @@ const PostCard = () => {
         <Modal.Body>
           <Form.Control
             as="textarea"
-            rows={8}
-            className="border-0 shadow-none fs-5"
+            rows={10}
             placeholder="What do you want to talk about?"
             value={postText}
-            onChange={(e) => setPostText(e.target.value)}
+            onChange={e => setPostText(e.target.value)}
           />
 
           <div className="d-flex flex-wrap align-items-center gap-2 mt-3">
@@ -177,14 +222,27 @@ const PostCard = () => {
 
           {showPicker && (
             <div className="mt-3">
-              <EmojiPicker onEmojiClick={handleEmojiClick} width="100%" />
+              <EmojiPicker onEmojiClick={handleEmojiClick} />
             </div>
           )}
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancel
+          <Button variant="" onClick={handleClose}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              role="img"
+              width="20"
+              height="20"
+              viewBox="0 0 15 15"
+              fill="none"
+            >
+              <path
+                fill="currentColor"
+                d="M7.5.85a6.65 6.65 0 1 1-5.072 2.349l.073-.07a.5.5 0 0 1 .69.717l-.154.188A5.65 5.65 0 1 0 8 1.874v1.648a.5.5 0 0 1-1 0V1.35l.01-.1a.5.5 0 0 1 .49-.4m-3.25 3.4a.25.25 0 0 1 .323-.026L8.08 6.741a.96.96 0 1 1-1.34 1.34L4.225 4.572a.25.25 0 0 1 .026-.323"
+              />
+            </svg>
           </Button>
 
           <Button
@@ -197,7 +255,7 @@ const PostCard = () => {
         </Modal.Footer>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default PostCard;
+export default PostCard
