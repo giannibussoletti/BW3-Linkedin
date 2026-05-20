@@ -1,25 +1,26 @@
 import { Col, Card, Form, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useRef } from "react";
-import AvatarEditor from "react-avatar-editor"; // <-- La libreria magica
+import AvatarEditor from "react-avatar-editor";
+import { useDispatch, useSelector } from "react-redux";
+import { setCoverImage } from "./redux/actions/editorPicture";
 
-const ChangePic = ({ onSaveImage }) => {
-  // 1. STATI PURE ED ESSENZIALI (Via calcoli verticali, drag, booleani e posizioni)
-  const [imageSrc, setImageSrc] = useState(
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Place_de_la_Bourse%2C_Bordeaux%2C_France.jpg/1920px-Place_de_la_Bourse%2C_Bordeaux%2C_France.jpg",
-  );
+const ChangePic = () => {
+  const dispatch = useDispatch();
+
+  const currentCover = useSelector((state) => state.currentCover);
+  const [imageSrc, setImageSrc] = useState(currentCover);
+
   const [zoom, setZoom] = useState(1);
   const [rotate, setRotate] = useState(0);
 
-  // 2. RIFERIMENTI
   const fileInputRef = useRef(null);
   const editorRef = useRef(null); // Riferimento per estrarre il ritaglio finale
 
-  // Proporzioni rigide 4:1 impostate per l'output finale (1200x300)
   const finalWidth = 1200;
   const finalHeight = 300;
 
-  // 3. CARICAMENTO NUOVA IMMAGINE
+  // CARICAMENTO NUOVA IMMAGINE
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -42,27 +43,22 @@ const ChangePic = ({ onSaveImage }) => {
     fileInputRef.current.click();
   };
 
-  // 4. SALVATAGGIO IMMEDIATO SENZA COMPLESSITÀ
+  // SALVATAGGIO
   const handleApply = () => {
     if (editorRef.current) {
       try {
-        // Chiediamo alla libreria il canvas ritagliato
         const canvas = editorRef.current.getImageScaledToCanvas();
 
-        // Creamo un canvas di supporto per forzare la risoluzione HD finale richiesta (1200x300)
         const finalCanvas = document.createElement("canvas");
         finalCanvas.width = finalWidth;
         finalCanvas.height = finalHeight;
         const ctx = finalCanvas.getContext("2d");
 
-        // Disegniamo il ritaglio riscaldandolo alla risoluzione perfetta di destinazione
         ctx.drawImage(canvas, 0, 0, finalWidth, finalHeight);
 
         const croppedBase64 = finalCanvas.toDataURL("image/jpeg", 0.95);
 
-        if (onSaveImage) {
-          onSaveImage(croppedBase64); // Passa il Base64 finale ad App.jsx
-        }
+        dispatch(setCoverImage(croppedBase64));
       } catch (error) {
         console.error("Errore durante il ritaglio della copertina:", error);
       }
@@ -89,8 +85,7 @@ const ChangePic = ({ onSaveImage }) => {
           />
         </div>
 
-        {/* Contenitore Editor gestito interamente da AvatarEditor */}
-        {/* Contenitore Editor con dimensioni fisse e centrate */}
+        {/* Contenitore Editor */}
         <div
           className="mt-3 position-relative d-flex align-items-center justify-content-center bg-dark"
           style={{
@@ -114,7 +109,7 @@ const ChangePic = ({ onSaveImage }) => {
           )}
         </div>
 
-        {/* Pulsanti di Rotazione Veloce (90°) */}
+        {/* Pulsanti di Rotazione */}
         <div className="p-2 d-flex justify-content-end bg-white">
           <button
             className="rounded-circle py-1 m-1 border border-1 bg-white btn btn-light"
@@ -149,7 +144,7 @@ const ChangePic = ({ onSaveImage }) => {
             </Form.Group>
           </div>
 
-          {/* Slider Rotazione Fine */}
+          {/* Slider Rotazione */}
           <div
             className="d-flex flex-column m-4 flex-grow-1"
             style={{ maxWidth: "250px" }}
@@ -169,7 +164,7 @@ const ChangePic = ({ onSaveImage }) => {
           </div>
         </div>
 
-        {/* Footer Opzioni finali */}
+        {/* Bottoni */}
         <div className="d-flex align-items-center justify-content-between py-3 px-4 border-top border-1 border-muted bg-light">
           <p
             className="fw-bold mb-0 text-danger small"
@@ -192,7 +187,6 @@ const ChangePic = ({ onSaveImage }) => {
             <Button
               className="rounded-5 px-4 py-1 fw-bold btn-primary"
               onClick={handleApply}
-              disabled={!imageSrc} // Disabilita il tasto se non c'è una foto caricata
             >
               Applica
             </Button>
