@@ -1,21 +1,19 @@
-import { Card, ListGroup, Button } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Card, ListGroup, Button } from "react-bootstrap"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   faPlus,
   faPen,
   faArrowRight,
   faGraduationCap,
   faBriefcase,
-} from "@fortawesome/free-solid-svg-icons";
+} from "@fortawesome/free-solid-svg-icons"
 
 const SkillsCard = () => {
   const skills = [
     {
       id: 1,
       name: "JavaScript",
-      sources: [
-        { id: 101, text: "EPICODE Institute of Technology", type: "education" },
-      ],
+      sources: [{ id: 101, text: "EPICODE Institute of Technology", type: "education" }],
     },
     {
       id: 2,
@@ -29,7 +27,7 @@ const SkillsCard = () => {
         { id: 202, text: "Com2 - Ente di formazione", type: "work" },
       ],
     },
-  ];
+  ]
 
   return (
     <Card className="mb-3 border-light shadow-sm">
@@ -53,14 +51,9 @@ const SkillsCard = () => {
               {skill.sources.map((source) => (
                 <div
                   key={source.id}
-                  className="small text-secondary d-flex align-items-center mb-1"
-                >
+                  className="small text-secondary d-flex align-items-center mb-1">
                   <FontAwesomeIcon
-                    icon={
-                      source.type === "education"
-                        ? faGraduationCap
-                        : faBriefcase
-                    }
+                    icon={source.type === "education" ? faGraduationCap : faBriefcase}
                     className={`me-2 ${source.type === "education" ? "text-danger" : "text-secondary"}`}
                   />
                   {source.text}
@@ -72,13 +65,12 @@ const SkillsCard = () => {
 
         <Button
           variant="light"
-          className="w-100 text-secondary fw-bold mt-2 py-2 border-0 bg-transparent text-center"
-        >
+          className="w-100 text-secondary fw-bold mt-2 py-2 border-0 bg-transparent text-center">
           Mostra tutto <FontAwesomeIcon icon={faArrowRight} className="ms-1" />
         </Button>
       </Card.Body>
     </Card>
-  );
-};
+  )
+}
 
-export default SkillsCard;
+export default SkillsCard
