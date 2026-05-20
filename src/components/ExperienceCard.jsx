@@ -1,12 +1,6 @@
-import { Card, Row, Col, ListGroup, Button } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPlus,
-  faPen,
-  faArrowRight,
-  faBriefcase,
-  faCode,
-} from "@fortawesome/free-solid-svg-icons";
+import { Card, Row, Col, ListGroup, Button } from "react-bootstrap"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faPlus, faPen, faArrowRight, faBriefcase, faCode } from "@fortawesome/free-solid-svg-icons"
 
 const ExperienceCard = () => {
   const experiences = [
@@ -40,7 +34,7 @@ const ExperienceCard = () => {
       skillsDetail: "Progettazione di siti WordPress, HTML e +2 competenze",
       iconColor: "bg-secondary",
     },
-  ];
+  ]
 
   return (
     <Card className="mb-3 border-light shadow-sm">
@@ -64,8 +58,7 @@ const ExperienceCard = () => {
                 <Col xs="auto" className="pe-0">
                   <div
                     className={`${exp.iconColor} text-white d-flex align-items-center justify-content-center rounded`}
-                    style={{ width: "48px", height: "48px" }}
-                  >
+                    style={{ width: "48px", height: "48px" }}>
                     <FontAwesomeIcon icon={faBriefcase} size="lg" />
                   </div>
                 </Col>
@@ -75,16 +68,11 @@ const ExperienceCard = () => {
                     {exp.company} · {exp.type}
                   </div>
                   <div className="text-secondary small">{exp.period}</div>
-                  {exp.location && (
-                    <div className="text-secondary small">{exp.location}</div>
-                  )}
+                  {exp.location && <div className="text-secondary small">{exp.location}</div>}
                   {exp.description && (
                     <p className="small mt-2 mb-2 text-dark">
                       {exp.description}{" "}
-                      <span
-                        className="text-muted fw-bold"
-                        style={{ cursor: "pointer" }}
-                      >
+                      <span className="text-muted fw-bold" style={{ cursor: "pointer" }}>
                         altro
                       </span>
                     </p>
@@ -102,13 +90,12 @@ const ExperienceCard = () => {
         </ListGroup>
         <Button
           variant="light"
-          className="w-100 text-secondary fw-bold mt-2 py-2 border-0 bg-transparent text-center"
-        >
+          className="w-100 text-secondary fw-bold mt-2 py-2 border-0 bg-transparent text-center">
           Mostra tutto <FontAwesomeIcon icon={faArrowRight} className="ms-1" />
         </Button>
       </Card.Body>
     </Card>
-  );
-};
+  )
+}
 
-export default ExperienceCard;
+export default ExperienceCard
