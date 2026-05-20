@@ -1,24 +1,24 @@
-import "bootstrap/dist/css/bootstrap.min.css"
-import "bootstrap-icons/font/bootstrap-icons.css"
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 //
-import NavbarLinkedin from "./Components/navbar/NavbarLinkedin"
-import PostCard from "./Components/PostCard"
-import SidebarLeft from "./Components/SidebarLeft"
-import RightSideBar from "./Components/RightSideBar"
-import LowProfilePage from "./Components/LowProfilePage"
-import FeedPostCard from "./Components/FeedPostCard"
-import ChatBox from "./Components/ChatBox"
-import RightSideBarProfile from "./Components/RightSideBarProfile"
+import NavbarLinkedin from "./Components/navbar/NavbarLinkedin";
+import PostCard from "./Components/PostCard";
+import SidebarLeft from "./Components/SidebarLeft";
+import RightSideBar from "./Components/RightSideBar";
+import LowProfilePage from "./Components/LowProfilePage";
+import FeedPostCard from "./Components/FeedPostCard";
+import ChatBox from "./Components/ChatBox";
+import RightSideBarProfile from "./Components/RightSideBarProfile";
 //
-import { BrowserRouter, Route, Routes } from "react-router"
+import { BrowserRouter, Route, Routes } from "react-router";
 /* import all the icons in Free Solid, Free Regular, and Brands styles */
-library.add(fas, far, fab)
-import { library } from "@fortawesome/fontawesome-svg-core"
-import { fas } from "@fortawesome/free-solid-svg-icons"
-import { far } from "@fortawesome/free-regular-svg-icons"
-import { fab } from "@fortawesome/free-brands-svg-icons"
+library.add(fas, far, fab);
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { fas } from "@fortawesome/free-solid-svg-icons";
+import { far } from "@fortawesome/free-regular-svg-icons";
+import { fab } from "@fortawesome/free-brands-svg-icons";
 
-import { Col, Row, Container } from "react-bootstrap"
+import { Col, Row, Container } from "react-bootstrap";
 
 const App = function () {
   return (
@@ -46,7 +46,7 @@ const App = function () {
                 }
               />
               <Route
-                path="/profile"
+                path="/profile/:userId"
                 element={
                   <>
                     <LowProfilePage />
@@ -60,7 +60,7 @@ const App = function () {
         </Container>
       </div>
     </BrowserRouter>
-  )
-}
+  );
+};
 
-export default App
+export default App;
