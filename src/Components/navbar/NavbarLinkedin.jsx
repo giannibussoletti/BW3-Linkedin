@@ -7,10 +7,12 @@ import {
   Form,
   Nav,
 } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
 import { navBarObj, iconSize, navLinkClass, pClass } from "./class-objects";
 import { useNavigate } from "react-router";
 const NavbarLinkedin = () => {
+  const profileImage = useSelector((state) => state.currentProfile);
   const navigate = useNavigate();
   const userId = "6a0d76433a03a800150d93cc";
   return (
@@ -58,7 +60,8 @@ const NavbarLinkedin = () => {
             >
               <Image
                 className="rounded-circle"
-                src="https://placecats.com/30/30"
+                src={profileImage}
+                style={{ width: "30px", height: "30px" }}
               />
               <p className={pClass}>Tu</p>
             </Nav.Link>
