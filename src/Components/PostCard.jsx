@@ -134,64 +134,158 @@ const PostCard = () => {
         </section>
       </Card>
 
-      <Modal show={showModal} onHide={handleClose} centered size="lg">
+      <Modal show={showModal} onHide={handleClose} centered>
         <Modal.Header closeButton>
-          <div className="d-flex align-items-center gap-2">
-            <img
-              src="./mockup/user1.png"
-              alt="user"
-              style={{
-                width: "50px",
-                height: "50px",
-                borderRadius: "50%",
-                objectFit: "cover",
-              }}
-            />
-            <Modal.Title>userName</Modal.Title>
-          </div>
+          <Card.Img
+            style={{ margin: "1vw", width: "5vw", borderRadius: 20 }}
+            className="m-1 w-3 rounded "
+            variant="left"
+            src="./mockup/user1.png"
+          />
+          <Modal.Title>userName</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
           <Form.Control
             as="textarea"
-            rows={8}
-            className="border-0 shadow-none fs-5"
+            rows={10}
             placeholder="What do you want to talk about?"
             value={postText}
             onChange={(e) => setPostText(e.target.value)}
           />
-
-          <div className="d-flex flex-wrap align-items-center gap-2 mt-3">
-            <Button
-              className="border-0 bg-transparent p-1"
-              onClick={() => setShowPicker(!showPicker)}
+          <Button
+            className="mt-3"
+            variant=""
+            onClick={() => setShowPicker(!showPicker)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              role="img"
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+              style={{ color: "rgb(28, 32, 51)" }}
             >
-              😊
-            </Button>
+              <g fill="none">
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="9.25"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                />
 
-            <Button className="border-0 bg-transparent p-1">🖼️</Button>
-            <Button className="border-0 bg-transparent p-1">📅</Button>
-            <Button className="border-0 bg-transparent p-1">⭐</Button>
-            <Button className="border-0 bg-transparent p-1">➕</Button>
-          </div>
+                <circle cx="9" cy="9.5" r="1.25" fill="currentColor" />
 
+                <circle cx="15" cy="9.5" r="1.25" fill="currentColor" />
+
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                  d="M15.464 14.25a4 4 0 0 1-6.928 0"
+                />
+              </g>
+            </svg>
+          </Button>
           {showPicker && (
             <div className="mt-3">
-              <EmojiPicker onEmojiClick={handleEmojiClick} width="100%" />
+              <EmojiPicker onEmojiClick={handleEmojiClick} />
             </div>
           )}
+           <section>
+            <Button className="mt-3" variant="">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                role="img"
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                style={{ color: "rgb(74, 85, 101)" }}
+              >
+                <g fill="currentColor" fillRule="evenodd" clipRule="evenodd">
+                  <path d="M7 7a3 3 0 1 0 0 6a3 3 0 0 0 0-6m-1 3a1 1 0 1 1 2 0a1 1 0 0 1-2 0" />
+
+                  <path d="M3 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h18a3 3 0 0 0 3-3V6a3 3 0 0 0-3-3zm18 2H3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h4.314l6.878-6.879a3 3 0 0 1 4.243 0L22 15.686V6a1 1 0 0 0-1-1m0 14H10.142l5.465-5.464a1 1 0 0 1 1.414 0l4.886 4.886A1 1 0 0 1 21 19" />
+                </g>
+              </svg>
+            </Button>
+            <Button className="mt-3" variant="">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                role="img"
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                style={{ color: "rgb(74, 85, 101)" }}
+              >
+                <path
+                  fill="currentColor"
+                  fillRule="evenodd"
+                  d="M8 4h8V2h2v2h1a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1V2h2zM5 8v12h14V8zm2 3h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2zm0 4h2v2h-2zm-4 0h2v2h-2zm-4 0h2v2H7z"
+                />
+              </svg>
+            </Button>
+            <Button className="mt-3" variant="">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                role="img"
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                style={{ color: "rgb(74, 85, 101)" }}
+              >
+                <path
+                  fill="currentColor"
+                  d="M9.075 16.25L12 14.475l2.925 1.775l-.775-3.325l2.6-2.25l-3.425-.275L12 7.25l-1.325 3.15l-3.425.275l2.6 2.25zM12 23.3L8.65 20H4v-4.65L.7 12L4 8.65V4h4.65L12 .7L15.35 4H20v4.65L23.3 12L20 15.35V20h-4.65zm0-2.8l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18h3.5zm0-8.5"
+                />
+              </svg>
+            </Button>
+            <Button className="mt-3" variant="">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                role="img"
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                style={{ color: "rgb(74, 85, 101)" }}
+              >
+                <path
+                  fill="currentColor"
+                  d="M5 13v-1h6V6h1v6h6v1h-6v6h-1v-6z"
+                />
+              </svg>
+            </Button>
+          </section>
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancel
+          <Button variant="" onClick={handleClose}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              role="img"
+              width="20"
+              height="20"
+              viewBox="0 0 15 15"
+              fill="none"
+            >
+              <path
+                fill="currentColor"
+                d="M7.5.85a6.65 6.65 0 1 1-5.072 2.349l.073-.07a.5.5 0 0 1 .69.717l-.154.188A5.65 5.65 0 1 0 8 1.874v1.648a.5.5 0 0 1-1 0V1.35l.01-.1a.5.5 0 0 1 .49-.4m-3.25 3.4a.25.25 0 0 1 .323-.026L8.08 6.741a.96.96 0 1 1-1.34 1.34L4.225 4.572a.25.25 0 0 1 .026-.323"
+              />
+            </svg>
           </Button>
 
-          <Button
-            variant="primary"
-            onClick={handlePost}
-            disabled={postText.trim() === ""}
-          >
+          <Button variant="primary" onClick={handlePost}>
             Post
           </Button>
         </Modal.Footer>
