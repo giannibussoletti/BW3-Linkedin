@@ -86,7 +86,7 @@ const RightSideBarProfile = function () {
 
   return (
     <div
-      className="d-flex flex-column gap-2 font-sans w-100 "
+      className="d-flex flex-column gap-2 font-sans w-100 pt-4"
       style={{ maxWidth: "100%" }}
     >
       <Card
