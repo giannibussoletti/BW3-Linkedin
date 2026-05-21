@@ -86,8 +86,8 @@ const RightSideBarProfile = function () {
 
   return (
     <div
-      style={{ maxWidth: "320px" }}
-      className="d-flex flex-column gap-2 font-sans"
+      className="d-flex flex-column gap-2 font-sans w-100 "
+      style={{ maxWidth: "100%" }}
     >
       <Card
         style={{ borderRadius: "12px", borderColor: "#e0e0e0" }}
