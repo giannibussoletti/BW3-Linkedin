@@ -89,7 +89,7 @@ const PostCard = () => {
       }
     }
 
-    alert("Post created ")
+    alert("Post created successfully!")
     handleClose()
   } catch (error) {
     console.log("ERROR:", error)
