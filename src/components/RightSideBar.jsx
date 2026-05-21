@@ -5,7 +5,7 @@ const RightSideBar = function () {
   return (
     <div className="d-flex flex-column align-items-center">
       <Card
-        style={{ width: "320px", borderRadius: "12px", borderColor: "#e0e0e0" }}
+        style={{ width: "100%", borderRadius: "12px", borderColor: "#e0e0e0" }}
         className="p-3 shadow-sm bg-white"
       >
         <Card.Body className="p-0 mb-4">
