@@ -9,7 +9,10 @@ const FeedPostCard = () => {
   const [commentsByPost, setCommentsByPost] = useState({})
   const [openComments, setOpenComments] = useState({})
   const [likedPosts, setLikedPosts] = useState({})
-
+  const [likedComments, setLikedComments] = useState({})
+  const [editingCommentId, setEditingCommentId] = useState(null)
+  const [editedCommentText, setEditedCommentText] = useState("")
+  const [newComment, setNewComment] = useState({})
   const fetchPosts = async () => {
     try {
       const response = await fetch(
@@ -34,46 +37,152 @@ const FeedPostCard = () => {
   }
 
   const fetchComments = async postId => {
+  setOpenComments(prev => ({
+    ...prev,
+    [postId]: !prev[postId],
+  }))
+
+  try {
+    const response = await fetch(
+      "https://striveschool-api.herokuapp.com/api/comments/",
+      {
+        headers: {
+          Authorization: `Bearer ${TokenPaolo}`,
+        },
+      },
+    )
+
+    const data = await response.json()
+
+    const postComments = data.filter(comment => comment.elementId === postId)
+
+    setCommentsByPost(prev => ({
+      ...prev,
+      [postId]: postComments,
+    }))
+  } catch (error) {
+    console.log(error)
+
+    setCommentsByPost(prev => ({
+      ...prev,
+      [postId]: [],
+    }))
+  }
+}
+  const toggleLike = (postId) => {
+    setLikedPosts((prev) => ({
+      ...prev,
+      [postId]: !prev[postId],
+    }))
+  }
+  const deleteComment = async (commentId, postId) => {
     try {
-      const response = await fetch(
-        `https://striveschool-api.herokuapp.com/api/comments/${postId}`,
+      await fetch(
+        `https://striveschool-api.herokuapp.com/api/comments/${commentId}`,
         {
+          method: "DELETE",
           headers: {
             Authorization: `Bearer ${TokenPaolo}`,
           },
         },
       )
 
-      const data = await response.json()
-
-      setCommentsByPost(prev => ({
+      setCommentsByPost((prev) => ({
         ...prev,
-        [postId]: data,
-      }))
-
-      setOpenComments(prev => ({
-        ...prev,
-        [postId]: !prev[postId],
+        [postId]: prev[postId].filter((comment) => comment._id !== commentId),
       }))
     } catch (error) {
       console.log(error)
     }
   }
 
-  const toggleLike = postId => {
-    setLikedPosts(prev => ({
-      ...prev,
-      [postId]: !prev[postId],
-    }))
+  const startEditingComment = (comment) => {
+    setEditingCommentId(comment._id)
+    setEditedCommentText(comment.comment)
   }
 
+  const saveEditedComment = async (commentId, postId) => {
+    try {
+      const response = await fetch(
+        `https://striveschool-api.herokuapp.com/api/comments/${commentId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${TokenPaolo}`,
+          },
+          body: JSON.stringify({
+            comment: editedCommentText,
+            rate: 5,
+            elementId: postId,
+          }),
+        },
+      )
+
+      const updatedComment = await response.json()
+
+      setCommentsByPost((prev) => ({
+        ...prev,
+        [postId]: prev[postId].map((comment) =>
+          comment._id === commentId ? updatedComment : comment,
+        ),
+      }))
+
+      setEditingCommentId(null)
+      setEditedCommentText("")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const toggleCommentLike = (commentId) => {
+    setLikedComments((prev) => ({
+      ...prev,
+      [commentId]: !prev[commentId],
+    }))
+  }
+  const addComment = async (postId) => {
+    try {
+      if (!newComment[postId]?.trim()) return
+
+      const response = await fetch(
+        "https://striveschool-api.herokuapp.com/api/comments/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${TokenPaolo}`,
+          },
+          body: JSON.stringify({
+            comment: newComment[postId],
+            rate: 5,
+            elementId: postId,
+          }),
+        },
+      )
+
+      const createdComment = await response.json()
+
+      setCommentsByPost((prev) => ({
+        ...prev,
+        [postId]: [...(prev[postId] || []), createdComment],
+      }))
+
+      setNewComment((prev) => ({
+        ...prev,
+        [postId]: "",
+      }))
+    } catch (error) {
+      console.log(error)
+    }
+  }
   useEffect(() => {
     fetchPosts()
   }, [])
 
   return (
     <>
-      {posts.slice(0, 10).map(post => (
+      {posts.slice(0, 60).map((post) => (
         <Card key={post._id} className="w-100 shadow-sm mb-3">
           <Card.Body>
             {/* HEADER */}
@@ -95,9 +204,7 @@ const FeedPostCard = () => {
                     {post.user?.name} {post.user?.surname}
                   </h6>
 
-                  <p className="mb-0 text-muted small">
-                    {post.user?.title}
-                  </p>
+                  <p className="mb-0 text-muted small">{post.user?.title}</p>
 
                   <p className="mb-0 text-muted small">
                     {new Date(post.createdAt).toLocaleDateString()}
@@ -132,9 +239,7 @@ const FeedPostCard = () => {
             <div className="d-flex justify-content-between mt-3 text-muted small">
               <span>👍 {likedPosts[post._id] ? 1 : 0}</span>
 
-              <span>
-                {commentsByPost[post._id]?.length || 0} comments
-              </span>
+              <span>{commentsByPost[post._id]?.length || 0} comments</span>
             </div>
 
             <hr />
@@ -149,9 +254,7 @@ const FeedPostCard = () => {
                   border: "none",
                   background: "transparent",
                   cursor: "pointer",
-                  color: likedPosts[post._id]
-                    ? "black"
-                    : "rgb(74, 85, 101)",
+                  color: likedPosts[post._id] ? "black" : "rgb(74, 85, 101)",
                 }}
               >
                 <svg
@@ -179,9 +282,7 @@ const FeedPostCard = () => {
                   border: "none",
                   background: "transparent",
                   cursor: "pointer",
-                  color: openComments[post._id]
-                    ? "black"
-                    : "rgb(74, 85, 101)",
+                  color: openComments[post._id] ? "black" : "rgb(74, 85, 101)",
                 }}
               >
                 <svg
@@ -241,23 +342,122 @@ const FeedPostCard = () => {
             {/* COMMENTS */}
             {openComments[post._id] && (
               <div className="mt-3">
+                <div className="d-flex gap-2 mb-3">
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Type a comment here..."
+                    value={newComment[post._id] || ""}
+                    onChange={(e) =>
+                      setNewComment((prev) => ({
+                        ...prev,
+                        [post._id]: e.target.value,
+                      }))
+                    }
+                  />
+
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => addComment(post._id)}
+                  >
+                    Send
+                  </button>
+                </div>
                 {commentsByPost[post._id]?.length > 0 ? (
-                  commentsByPost[post._id].map(comment => (
+                  commentsByPost[post._id].map((comment) => (
                     <div
                       key={comment._id}
-                      className="border rounded p-2 mb-2"
+                      className="border rounded p-2 mb-2 position-relative"
                     >
-                      <p className="mb-1">{comment.comment}</p>
+                      <button
+                        type="button"
+                        onClick={() => deleteComment(comment._id, post._id)}
+                        style={{
+                          position: "absolute",
+                          top: "5px",
+                          right: "8px",
+                          border: "none",
+                          background: "transparent",
+                          cursor: "pointer",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        ✕
+                      </button>
 
-                      <small className="text-muted">
-                        ⭐ {comment.rate}
-                      </small>
+                      {editingCommentId === comment._id ? (
+                        <>
+                          <input
+                            type="text"
+                            className="form-control mb-2"
+                            value={editedCommentText}
+                            onChange={(e) =>
+                              setEditedCommentText(e.target.value)
+                            }
+                          />
+
+                          <button
+                            type="button"
+                            className="btn btn-sm btn-primary me-2"
+                            onClick={() =>
+                              saveEditedComment(comment._id, post._id)
+                            }
+                          >
+                            Save
+                          </button>
+
+                          <button
+                            type="button"
+                            className="btn btn-sm btn-secondary"
+                            onClick={() => setEditingCommentId(null)}
+                          >
+                            Delete
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <p className="mb-1 pe-4">{comment.comment}</p>
+
+                          <div className="d-flex align-items-center gap-3">
+                            <small className="text-muted">
+                              ⭐ {comment.rate}
+                            </small>
+
+                            <button
+                              type="button"
+                              onClick={() => startEditingComment(comment)}
+                              style={{
+                                border: "none",
+                                background: "transparent",
+                                cursor: "pointer",
+                                color: "rgb(74, 85, 101)",
+                              }}
+                            >
+                              Edit
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => toggleCommentLike(comment._id)}
+                              style={{
+                                border: "none",
+                                background: "transparent",
+                                cursor: "pointer",
+                                color: likedComments[comment._id]
+                                  ? "red"
+                                  : "gray",
+                              }}
+                            >
+                              ♥
+                            </button>
+                          </div>
+                        </>
+                      )}
                     </div>
                   ))
                 ) : (
-                  <p className="text-muted small mb-0">
-                    No hay comentarios
-                  </p>
+                  <p className="text-muted small mb-0">No Comments</p>
                 )}
               </div>
             )}
