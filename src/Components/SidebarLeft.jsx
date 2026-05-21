@@ -1,21 +1,24 @@
 import { Card, Col } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const SidebarLeft = () => {
+  const currentCover = useSelector((state) => state.currentCover);
+  const profileImage = useSelector((state) => state.currentProfile);
   return (
     <Col>
       <Card className="shadow-sm rounded-3 position-relative mb-3">
         <Card.Img
           className="rounded-top-3"
           variant="top"
-          src="https://picsum.photos/id/1015/600/200"
+          src={currentCover}
           style={{ height: "60px", objectFit: "cover" }}
         />
 
         <Card.Img
           className="rounded-circle position-absolute border border-2 border-light"
-          src="https://picsum.photos/id/1015/600/200"
+          src={profileImage}
           style={{
             height: "70px",
             width: "70px",
