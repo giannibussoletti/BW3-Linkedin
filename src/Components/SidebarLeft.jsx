@@ -60,19 +60,19 @@ const SidebarLeft = () => {
         </div>
       </Card>
       <Card className="p-2 px-3 shadow-sm rounded-3 mb-3">
-        <div className="d-flex">
+        <div className="d-flex align-items-center m-1">
           <FontAwesomeIcon icon={["fas", "bookmark"]} />
-          <p className="fw-bold px-3">Elementi salvati</p>
+          <p className="m-0 fw-bold px-3">Elementi salvati</p>
         </div>
-        <div className="d-flex">
+        <div className="d-flex align-items-center m-1">
           <FontAwesomeIcon icon={["fas", "people-group"]} />
-          <p className="fw-bold px-3">Gruppi</p>
+          <p className="m-0 fw-bold px-3">Gruppi</p>
         </div>
-        <div className="d-flex">
+        <div className="d-flex align-items-center m-1">
           <FontAwesomeIcon icon={["fas", "newspaper"]} />
-          <p className="fw-bold px-3">Newsletter</p>
+          <p className="m-0 fw-bold px-3">Newsletter</p>
         </div>
-        <div className="d-flex">
+        <div className="d-flex align-items-center m-1">
           <FontAwesomeIcon icon={["fas", "calendar"]} />
           <p className="m-0 fw-bold px-3">Eventi</p>
         </div>
