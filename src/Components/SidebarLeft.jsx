@@ -1,14 +1,21 @@
 import { Card, Col } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const SidebarLeft = () => {
   const currentCover = useSelector((state) => state.currentCover);
   const profileImage = useSelector((state) => state.currentProfile);
+  const navigate = useNavigate();
+  const userId = "6a0d76433a03a800150d93cc";
   return (
     <Col>
-      <Card className="shadow-sm rounded-3 position-relative mb-3">
+      <Card
+        className="shadow-sm rounded-3 position-relative mb-3"
+        style={{ cursor: "pointer" }}
+        onClick={() => navigate(`/profile/${userId}`)}
+      >
         <Card.Img
           className="rounded-top-3"
           variant="top"
