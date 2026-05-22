@@ -92,7 +92,7 @@ const MainProfileInfo = () => {
         <Col>
           <div className="d-none d-md-flex gap-2 align-items-center">
             <div style={{ width: "40px" }}>
-              <Image className="w-100" src="./epicodeschool_logo.jpg" />
+              <Image className="w-100" src="../epicodeschool_logo.jpg" />
             </div>
             <p className="m-0 fw-semibold">EPICODE Institute of Technology</p>
           </div>
