@@ -25,11 +25,11 @@ const PostCard = () => {
 
   const handleShow = () => setShowModal(true)
 
-  const handleEmojiClick = emojiData => {
-    setPostText(prev => prev + emojiData.emoji)
+  const handleEmojiClick = (emojiData) => {
+    setPostText((prev) => prev + emojiData.emoji)
   }
 
-  const handleImageChange = e => {
+  const handleImageChange = (e) => {
     const file = e.target.files[0]
 
     if (file) {
@@ -39,15 +39,13 @@ const PostCard = () => {
   }
 
   const handlePost = async () => {
-  try {
-    if (!postText.trim() && !selectedImage) {
-      alert("Escribe algo o selecciona una imagen")
-      return
-    }
+    try {
+      if (!postText.trim() && !selectedImage) {
+        alert("Escribe algo o selecciona una imagen")
+        return
+      }
 
-    const response = await fetch(
-      "https://striveschool-api.herokuapp.com/api/posts/",
-      {
+      const response = await fetch("https://striveschool-api.herokuapp.com/api/posts/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -56,50 +54,49 @@ const PostCard = () => {
         body: JSON.stringify({
           text: postText || " ",
         }),
-      },
-    )
+      })
 
-    const data = await response.json()
-    console.log("RESPUESTA POST:", data)
+      const data = await response.json()
+      console.log("RESPUESTA POST:", data)
 
-    if (!response.ok) {
-      throw new Error(data.message || "Error creando el post")
-    }
-
-    if (selectedImage) {
-      const formData = new FormData()
-      formData.append("post", selectedImage)
-
-      const imageResponse = await fetch(
-        `https://striveschool-api.herokuapp.com/api/posts/${data._id}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${TokenPaolo}`,
-          },
-          body: formData,
-        },
-      )
-
-      const imageData = await imageResponse.json()
-      console.log("RESPUESTA IMAGEN:", imageData)
-
-      if (!imageResponse.ok) {
-        throw new Error(imageData.message || "Error subiendo imagen")
+      if (!response.ok) {
+        throw new Error(data.message || "Error creando el post")
       }
-    }
 
-    alert("Post created successfully!")
-    handleClose()
-  } catch (error) {
-    console.log("ERROR:", error)
-    alert(error.message)
+      if (selectedImage) {
+        const formData = new FormData()
+        formData.append("post", selectedImage)
+
+        const imageResponse = await fetch(
+          `https://striveschool-api.herokuapp.com/api/posts/${data._id}`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${TokenPaolo}`,
+            },
+            body: formData,
+          },
+        )
+
+        const imageData = await imageResponse.json()
+        console.log("RESPUESTA IMAGEN:", imageData)
+
+        if (!imageResponse.ok) {
+          throw new Error(imageData.message || "Error subiendo imagen")
+        }
+      }
+
+      alert("Post created successfully!")
+      handleClose()
+    } catch (error) {
+      console.log("ERROR:", error)
+      alert(error.message)
+    }
   }
-}
 
   return (
     <>
-      <Card className="w-100">
+      <Card className="w-100 mb-3">
         <Card.Body className="d-flex align-items-center gap-2">
           <img
             src="./mockup/user1.png"
@@ -132,8 +129,7 @@ const PostCard = () => {
               width="32"
               height="32"
               viewBox="0 0 24 24"
-              style={{ color: "rgb(68, 113, 46)" }}
-            >
+              style={{ color: "rgb(68, 113, 46)" }}>
               <path
                 fill="currentColor"
                 fillRule="evenodd"
@@ -150,8 +146,7 @@ const PostCard = () => {
               width="32"
               height="32"
               viewBox="0 0 56 56"
-              style={{ color: "rgb(58, 118, 245)" }}
-            >
+              style={{ color: "rgb(58, 118, 245)" }}>
               <path
                 fill="currentColor"
                 d="M7.715 49.574h40.57c4.899 0 7.36-2.437 7.36-7.265V13.69c0-4.828-2.461-7.265-7.36-7.265H7.715C2.84 6.426.355 8.84.355 13.69v28.62c0 4.851 2.485 7.265 7.36 7.265m31.57-21.633c-1.055-.937-2.25-1.43-3.515-1.43c-1.313 0-2.462.446-3.54 1.407l-10.593 9.469l-4.336-3.938c-.985-.867-2.04-1.336-3.164-1.336c-1.032 0-2.04.446-3 1.313L4.129 39.73V13.88c0-2.438 1.312-3.68 3.656-3.68h40.43c2.32 0 3.656 1.242 3.656 3.68v25.875Zm-21.469.258c3.024 0 5.508-2.484 5.508-5.531c0-3.023-2.484-5.531-5.508-5.531c-3.046 0-5.53 2.508-5.53 5.531a5.54 5.54 0 0 0 5.53 5.531"
@@ -166,8 +161,7 @@ const PostCard = () => {
               width="32"
               height="32"
               viewBox="0 0 24 24"
-              style={{ color: "rgb(226, 81, 19)" }}
-            >
+              style={{ color: "rgb(226, 81, 19)" }}>
               <path
                 fill="none"
                 stroke="currentColor"
@@ -197,7 +191,7 @@ const PostCard = () => {
             rows={10}
             placeholder="What do you want to talk about?"
             value={postText}
-            onChange={e => setPostText(e.target.value)}
+            onChange={(e) => setPostText(e.target.value)}
           />
 
           {imagePreview && (
@@ -212,11 +206,7 @@ const PostCard = () => {
             />
           )}
 
-          <Button
-            className="mt-3"
-            variant=""
-            onClick={() => setShowPicker(!showPicker)}
-          >
+          <Button className="mt-3" variant="" onClick={() => setShowPicker(!showPicker)}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               aria-hidden="true"
@@ -224,8 +214,7 @@ const PostCard = () => {
               width="30"
               height="30"
               viewBox="0 0 24 24"
-              style={{ color: "rgb(28, 32, 51)" }}
-            >
+              style={{ color: "rgb(28, 32, 51)" }}>
               <g fill="none">
                 <circle
                   cx="12"
@@ -267,8 +256,7 @@ const PostCard = () => {
             <Button
               className="mt-3"
               variant=""
-              onClick={() => document.getElementById("image-upload").click()}
-            >
+              onClick={() => document.getElementById("image-upload").click()}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 aria-hidden="true"
@@ -276,8 +264,7 @@ const PostCard = () => {
                 width="30"
                 height="30"
                 viewBox="0 0 24 24"
-                style={{ color: "rgb(74, 85, 101)" }}
-              >
+                style={{ color: "rgb(74, 85, 101)" }}>
                 <g fill="currentColor" fillRule="evenodd" clipRule="evenodd">
                   <path d="M7 7a3 3 0 1 0 0 6a3 3 0 0 0 0-6m-1 3a1 1 0 1 1 2 0a1 1 0 0 1-2 0" />
                   <path d="M3 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h18a3 3 0 0 0 3-3V6a3 3 0 0 0-3-3zm18 2H3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h4.314l6.878-6.879a3 3 0 0 1 4.243 0L22 15.686V6a1 1 0 0 0-1-1m0 14H10.142l5.465-5.464a1 1 0 0 1 1.414 0l4.886 4.886A1 1 0 0 1 21 19" />
@@ -293,8 +280,7 @@ const PostCard = () => {
                 width="30"
                 height="30"
                 viewBox="0 0 24 24"
-                style={{ color: "rgb(74, 85, 101)" }}
-              >
+                style={{ color: "rgb(74, 85, 101)" }}>
                 <path
                   fill="currentColor"
                   fillRule="evenodd"
@@ -311,8 +297,7 @@ const PostCard = () => {
                 width="30"
                 height="30"
                 viewBox="0 0 24 24"
-                style={{ color: "rgb(74, 85, 101)" }}
-              >
+                style={{ color: "rgb(74, 85, 101)" }}>
                 <path
                   fill="currentColor"
                   d="M9.075 16.25L12 14.475l2.925 1.775l-.775-3.325l2.6-2.25l-3.425-.275L12 7.25l-1.325 3.15l-3.425.275l2.6 2.25zM12 23.3L8.65 20H4v-4.65L.7 12L4 8.65V4h4.65L12 .7L15.35 4H20v4.65L23.3 12L20 15.35V20h-4.65zm0-2.8l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18h3.5zm0-8.5"
@@ -328,12 +313,8 @@ const PostCard = () => {
                 width="30"
                 height="30"
                 viewBox="0 0 24 24"
-                style={{ color: "rgb(74, 85, 101)" }}
-              >
-                <path
-                  fill="currentColor"
-                  d="M5 13v-1h6V6h1v6h6v1h-6v6h-1v-6z"
-                />
+                style={{ color: "rgb(74, 85, 101)" }}>
+                <path fill="currentColor" d="M5 13v-1h6V6h1v6h6v1h-6v6h-1v-6z" />
               </svg>
             </Button>
           </section>
@@ -348,8 +329,7 @@ const PostCard = () => {
               width="20"
               height="20"
               viewBox="0 0 15 15"
-              fill="none"
-            >
+              fill="none">
               <path
                 fill="currentColor"
                 d="M7.5.85a6.65 6.65 0 1 1-5.072 2.349l.073-.07a.5.5 0 0 1 .69.717l-.154.188A5.65 5.65 0 1 0 8 1.874v1.648a.5.5 0 0 1-1 0V1.35l.01-.1a.5.5 0 0 1 .49-.4m-3.25 3.4a.25.25 0 0 1 .323-.026L8.08 6.741a.96.96 0 1 1-1.34 1.34L4.225 4.572a.25.25 0 0 1 .026-.323"
