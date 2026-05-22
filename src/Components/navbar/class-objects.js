@@ -26,7 +26,7 @@ export const navBarObj = [
     iconSize,
     pClass,
     name: "Lavoro",
-    link: "",
+    link: "/jobs",
   },
   {
     navLinkClass,
