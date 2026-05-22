@@ -1,76 +1,76 @@
-import { Card, Form, Button, Modal } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState, useRef } from "react";
-import AvatarEditor from "react-avatar-editor";
-import { useDispatch, useSelector } from "react-redux";
-import { setCoverImage } from "./Components/redux/actions/editorPicture";
-import { CLOSE_COVER_MODAL } from "./Components/redux/reducers/index";
+import { Card, Form, Button, Modal } from "react-bootstrap"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { useState, useRef } from "react"
+import AvatarEditor from "react-avatar-editor"
+import { useDispatch, useSelector } from "react-redux"
+import { setCoverImage } from "./Components/redux/actions/editorPicture"
+import { CLOSE_COVER_MODAL } from "./Components/redux/actions/actions"
 
 const ChangeCoverPic = () => {
-  const dispatch = useDispatch();
-  const show = useSelector((state) => state.isCoverModalOpen);
+  const dispatch = useDispatch()
+  const show = useSelector((state) => state.isCoverModalOpen)
 
-  const currentCover = useSelector((state) => state.currentCover);
-  const [imageSrc, setImageSrc] = useState(currentCover);
+  const currentCover = useSelector((state) => state.currentCover)
+  const [imageSrc, setImageSrc] = useState(currentCover)
 
-  const [zoom, setZoom] = useState(1);
-  const [rotate, setRotate] = useState(0);
+  const [zoom, setZoom] = useState(1)
+  const [rotate, setRotate] = useState(0)
 
-  const fileInputRef = useRef(null);
-  const editorRef = useRef(null); // Riferimento per estrarre il ritaglio finale
+  const fileInputRef = useRef(null)
+  const editorRef = useRef(null) // Riferimento per estrarre il ritaglio finale
 
-  const finalWidth = 1200;
-  const finalHeight = 300;
+  const finalWidth = 1200
+  const finalHeight = 300
 
   const handleClose = () => {
-    dispatch({ type: CLOSE_COVER_MODAL });
-  };
+    dispatch({ type: CLOSE_COVER_MODAL })
+  }
 
   // CARICAMENTO NUOVA IMMAGINE
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    const file = e.target.files[0]
+    if (!file) return
 
     if (!file.type.startsWith("image/")) {
-      alert("Seleziona un file immagine valido.");
-      return;
+      alert("Seleziona un file immagine valido.")
+      return
     }
 
-    const reader = new FileReader();
+    const reader = new FileReader()
     reader.onload = () => {
-      setImageSrc(reader.result);
-      setZoom(1);
-      setRotate(0);
-    };
-    reader.readAsDataURL(file);
-  };
+      setImageSrc(reader.result)
+      setZoom(1)
+      setRotate(0)
+    }
+    reader.readAsDataURL(file)
+  }
 
   const triggerFileInput = () => {
-    fileInputRef.current.click();
-  };
+    fileInputRef.current.click()
+  }
 
   // SALVATAGGIO
   const handleApply = () => {
     if (editorRef.current) {
       try {
-        const canvas = editorRef.current.getImageScaledToCanvas();
+        const canvas = editorRef.current.getImageScaledToCanvas()
 
-        const finalCanvas = document.createElement("canvas");
-        finalCanvas.width = finalWidth;
-        finalCanvas.height = finalHeight;
-        const ctx = finalCanvas.getContext("2d");
+        const finalCanvas = document.createElement("canvas")
+        finalCanvas.width = finalWidth
+        finalCanvas.height = finalHeight
+        const ctx = finalCanvas.getContext("2d")
 
-        ctx.drawImage(canvas, 0, 0, finalWidth, finalHeight);
+        ctx.drawImage(canvas, 0, 0, finalWidth, finalHeight)
 
-        const croppedBase64 = finalCanvas.toDataURL("image/jpeg", 0.95);
+        const croppedBase64 = finalCanvas.toDataURL("image/jpeg", 0.95)
 
-        dispatch(setCoverImage(croppedBase64));
-        handleClose();
+        dispatch(setCoverImage(croppedBase64))
+        handleClose()
       } catch (error) {
-        console.error("Errore durante il ritaglio della copertina:", error);
+        console.error("Errore durante il ritaglio della copertina:", error)
       }
     }
-  };
+  }
 
   return (
     <Modal
@@ -78,8 +78,7 @@ const ChangeCoverPic = () => {
       size="lg"
       show={show}
       onHide={handleClose}
-      contentClassName="bg-transparent border-0"
-    >
+      contentClassName="bg-transparent border-0">
       <Card className="position-relative shadow-sm overflow-hidden">
         <input
           type="file"
@@ -105,8 +104,7 @@ const ChangeCoverPic = () => {
           style={{
             height: "280px",
             width: "100%",
-          }}
-        >
+          }}>
           {imageSrc ? (
             <AvatarEditor
               ref={editorRef}
@@ -127,14 +125,12 @@ const ChangeCoverPic = () => {
         <div className="p-2 d-flex justify-content-end bg-white">
           <button
             className="rounded-circle py-1 m-1 border border-1 bg-white btn btn-light"
-            onClick={() => setRotate((prev) => prev - 90)}
-          >
+            onClick={() => setRotate((prev) => prev - 90)}>
             <FontAwesomeIcon icon={["fas", "rotate-left"]} />
           </button>
           <button
             className="rounded-circle py-1 m-1 border border-1 bg-white btn btn-light"
-            onClick={() => setRotate((prev) => prev + 90)}
-          >
+            onClick={() => setRotate((prev) => prev + 90)}>
             <FontAwesomeIcon icon={["fas", "rotate-right"]} />
           </button>
         </div>
@@ -142,10 +138,7 @@ const ChangeCoverPic = () => {
         {/* Slider Controlli */}
         <div className="d-flex justify-content-around bg-white border-top">
           {/* Slider Zoom */}
-          <div
-            className="d-flex flex-column m-4 flex-grow-1"
-            style={{ maxWidth: "250px" }}
-          >
+          <div className="d-flex flex-column m-4 flex-grow-1" style={{ maxWidth: "250px" }}>
             <p className="mb-1 text-muted small fw-bold">Zoom: {zoom}x</p>
             <Form.Group className="w-100 d-flex align-items-center">
               <Form.Range
@@ -159,13 +152,8 @@ const ChangeCoverPic = () => {
           </div>
 
           {/* Slider Rotazione */}
-          <div
-            className="d-flex flex-column m-4 flex-grow-1"
-            style={{ maxWidth: "250px" }}
-          >
-            <p className="mb-1 text-muted small fw-bold">
-              Rotazione fine: {rotate}°
-            </p>
+          <div className="d-flex flex-column m-4 flex-grow-1" style={{ maxWidth: "250px" }}>
+            <p className="mb-1 text-muted small fw-bold">Rotazione fine: {rotate}°</p>
             <Form.Group className="w-100 d-flex align-items-center">
               <Form.Range
                 min={-45}
@@ -184,31 +172,26 @@ const ChangeCoverPic = () => {
             className="fw-bold mb-0 text-danger small"
             style={{ cursor: "pointer" }}
             onClick={() => {
-              setImageSrc("");
-              setZoom(1);
-              setRotate(0);
-            }}
-          >
+              setImageSrc("")
+              setZoom(1)
+              setRotate(0)
+            }}>
             Elimina foto
           </p>
           <div>
             <Button
               className="rounded-5 bg-white text-primary fw-bold py-1 border-primary me-2 shadow-none"
-              onClick={triggerFileInput}
-            >
+              onClick={triggerFileInput}>
               Cambia foto
             </Button>
-            <Button
-              className="rounded-5 px-4 py-1 fw-bold btn-primary"
-              onClick={handleApply}
-            >
+            <Button className="rounded-5 px-4 py-1 fw-bold btn-primary" onClick={handleApply}>
               Applica
             </Button>
           </div>
         </div>
       </Card>
     </Modal>
-  );
-};
+  )
+}
 
-export default ChangeCoverPic;
+export default ChangeCoverPic
