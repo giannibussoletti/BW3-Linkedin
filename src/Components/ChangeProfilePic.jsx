@@ -1,63 +1,58 @@
-import { Card, Modal, Button, Form } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState, useRef } from "react";
-import AvatarEditor from "react-avatar-editor";
-import { useDispatch, useSelector } from "react-redux";
-import { setProfileImage } from "./redux/actions/editorPicture";
-import { CLOSE_EDIT_MODAL } from "./redux/reducers/index";
+import { Card, Modal, Button, Form } from "react-bootstrap"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { useState, useRef } from "react"
+import AvatarEditor from "react-avatar-editor"
+import { useDispatch, useSelector } from "react-redux"
+import { setProfileImage } from "./redux/actions/editorPicture"
+import { CLOSE_EDIT_MODAL } from "./redux/actions/actions"
 
 const ChangeProfilePic = () => {
-  const dispatch = useDispatch();
-  const show = useSelector((state) => state.isEditorPicModalOpen);
+  const dispatch = useDispatch()
+  const show = useSelector((state) => state.isEditorPicModalOpen)
 
-  const currentProfile = useSelector((state) => state.currentProfile);
+  const currentProfile = useSelector((state) => state.currentProfile)
 
-  const [imageSrc, setImageSrc] = useState(currentProfile || "");
+  const [imageSrc, setImageSrc] = useState(currentProfile || "")
 
-  const [zoom, setZoom] = useState(1);
-  const [rotate, setRotate] = useState(0);
+  const [zoom, setZoom] = useState(1)
+  const [rotate, setRotate] = useState(0)
 
-  const fileInputRef = useRef(null);
-  const editorRef = useRef(null); // Riferimento per estrarre l'immagine
+  const fileInputRef = useRef(null)
+  const editorRef = useRef(null) // Riferimento per estrarre l'immagine
 
   // CARICAMENTO FILE DA PC
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files[0]
     if (file && file.type.startsWith("image/")) {
-      const reader = new FileReader();
+      const reader = new FileReader()
       reader.onload = () => {
-        setImageSrc(reader.result);
+        setImageSrc(reader.result)
         // Resetta i controlli di zoom e rotazione per il nuovo file
-        setZoom(1);
-        setRotate(0);
-      };
-      reader.readAsDataURL(file);
+        setZoom(1)
+        setRotate(0)
+      }
+      reader.readAsDataURL(file)
     }
-  };
+  }
 
   const triggerFileInput = () => {
-    fileInputRef.current.click();
-  };
+    fileInputRef.current.click()
+  }
 
   // LOGICA DI SALVATAGGIO
   const handleSave = () => {
     if (editorRef.current) {
-      const canvas = editorRef.current.getImageScaledToCanvas();
+      const canvas = editorRef.current.getImageScaledToCanvas()
       // Genera il Base64
-      const base64Image = canvas.toDataURL("image/jpeg", 0.95);
+      const base64Image = canvas.toDataURL("image/jpeg", 0.95)
 
-      dispatch(setProfileImage(base64Image));
-      dispatch({ type: CLOSE_EDIT_MODAL });
+      dispatch(setProfileImage(base64Image))
+      dispatch({ type: CLOSE_EDIT_MODAL })
     }
-  };
+  }
 
   return (
-    <Modal
-      size="lg"
-      show={show}
-      onHide={() => dispatch({ type: CLOSE_EDIT_MODAL })}
-      centered
-    >
+    <Modal size="lg" show={show} onHide={() => dispatch({ type: CLOSE_EDIT_MODAL })} centered>
       <Card>
         <input
           type="file"
@@ -83,8 +78,7 @@ const ChangeProfilePic = () => {
               style={{
                 width: "350px",
                 height: "350px",
-              }}
-            >
+              }}>
               <AvatarEditor
                 ref={editorRef}
                 image={imageSrc}
@@ -117,14 +111,9 @@ const ChangeProfilePic = () => {
               <div className="p-4 d-flex flex-column gap-4 bg-white">
                 {/* Controllo Zoom */}
                 <div>
-                  <Form.Label className="small fw-bold text-muted mb-1">
-                    Zoom
-                  </Form.Label>
+                  <Form.Label className="small fw-bold text-muted mb-1">Zoom</Form.Label>
                   <div className="d-flex align-items-center gap-2">
-                    <FontAwesomeIcon
-                      icon={["fas", "minus"]}
-                      className="small text-muted"
-                    />
+                    <FontAwesomeIcon icon={["fas", "minus"]} className="small text-muted" />
                     <Form.Range
                       min={1}
                       max={4}
@@ -132,10 +121,7 @@ const ChangeProfilePic = () => {
                       value={zoom}
                       onChange={(e) => setZoom(parseFloat(e.target.value))}
                     />
-                    <FontAwesomeIcon
-                      icon={["fas", "plus"]}
-                      className="small text-muted"
-                    />
+                    <FontAwesomeIcon icon={["fas", "plus"]} className="small text-muted" />
                   </div>
                 </div>
 
@@ -174,22 +160,18 @@ const ChangeProfilePic = () => {
           <div className="p-2 d-flex justify-content-end align-items-center border-top border-muted bg-light">
             <Button
               className="rounded-5 fw-bold py-1 bg-transparent text-black border-0 me-2 shadow-none"
-              onClick={triggerFileInput}
-            >
+              onClick={triggerFileInput}>
               Cambia foto
             </Button>
 
-            <Button
-              className="rounded-5 px-3 py-1 fw-bold mx-2 btn-primary"
-              onClick={handleSave}
-            >
+            <Button className="rounded-5 px-3 py-1 fw-bold mx-2 btn-primary" onClick={handleSave}>
               Salva foto
             </Button>
           </div>
         </div>
       </Card>
     </Modal>
-  );
-};
+  )
+}
 
-export default ChangeProfilePic;
+export default ChangeProfilePic

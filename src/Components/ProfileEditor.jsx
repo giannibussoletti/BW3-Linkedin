@@ -1,26 +1,26 @@
-import { Card, Modal } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useSelector, useDispatch } from "react-redux";
-import { CLOSE_PROFILE_MODAL, OPEN_EDIT_MODAL } from "./redux/reducers/index";
+import { Card, Modal } from "react-bootstrap"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { useSelector, useDispatch } from "react-redux"
+import { CLOSE_PROFILE_MODAL, OPEN_EDIT_MODAL } from "./redux/actions/actions"
 
 const ProfilePic = () => {
-  const profileImage = useSelector((state) => state.currentProfile);
-  const show = useSelector((state) => state.isProfileModalOpen);
-  const dispatch = useDispatch();
+  const profileImage = useSelector((state) => state.currentProfile)
+  const show = useSelector((state) => state.isProfileModalOpen)
+  const dispatch = useDispatch()
 
-  const handleClose = () => dispatch({ type: CLOSE_PROFILE_MODAL });
+  const handleClose = () => dispatch({ type: CLOSE_PROFILE_MODAL })
 
   const handleModificaClick = () => {
     // 1. Chiudiamo subito il modale attuale nel Redux
-    dispatch({ type: CLOSE_PROFILE_MODAL });
+    dispatch({ type: CLOSE_PROFILE_MODAL })
 
     // 2. Rimandiamo l'apertura del secondo al prossimo ciclo di esecuzione.
     // Questo permette a Bootstrap di smontare il primo modale dal DOM
     // prima che Redux metta a "true" l'apertura del secondo.
     setTimeout(() => {
-      dispatch({ type: OPEN_EDIT_MODAL });
-    }, 300); // 150ms bastano per far finire l'animazione di chiusura
-  };
+      dispatch({ type: OPEN_EDIT_MODAL })
+    }, 300) // 150ms bastano per far finire l'animazione di chiusura
+  }
 
   return (
     <Modal
@@ -28,16 +28,11 @@ const ProfilePic = () => {
       size="lg"
       show={show}
       onHide={handleClose}
-      contentClassName="bg-transparent border-0"
-    >
+      contentClassName="bg-transparent border-0">
       <Card className="bg-dark rounded-4">
         <div className="d-flex justify-content-between align-items-center p-4 text-light">
           <h5>Foto profilo</h5>
-          <FontAwesomeIcon
-            icon={["fas", "xmark"]}
-            className="fs-4"
-            onClick={handleClose}
-          />
+          <FontAwesomeIcon icon={["fas", "xmark"]} className="fs-4" onClick={handleClose} />
         </div>
         <div className="d-flex justify-content-center mb-2 pt-3">
           <img
@@ -57,8 +52,7 @@ const ProfilePic = () => {
         <div className="d-flex mb-1 gap-5 text-light border-top border-secondary px-3 pt-3">
           <button
             className="d-flex flex-column align-items-center bg-transparent border-0 text-light link-secondary "
-            onClick={handleModificaClick}
-          >
+            onClick={handleModificaClick}>
             <FontAwesomeIcon icon={["fas", "pencil"]} />
             <p>Modifica</p>
           </button>
@@ -77,7 +71,7 @@ const ProfilePic = () => {
         </div>
       </Card>
     </Modal>
-  );
-};
+  )
+}
 
-export default ProfilePic;
+export default ProfilePic

@@ -1,10 +1,6 @@
-import { Card, Row, Col, Badge, Button } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faHeart,
-  faGraduationCap,
-  faCheck,
-} from "@fortawesome/free-solid-svg-icons";
+import { Card, Row, Col, Badge, Button } from "react-bootstrap"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faHeart, faGraduationCap, faCheck } from "@fortawesome/free-solid-svg-icons"
 
 const InterestsCard = () => {
   return (
@@ -12,12 +8,7 @@ const InterestsCard = () => {
       <Card.Body>
         <h5 className="fw-bold mb-3">Interessi</h5>
         <div className="d-flex gap-2 mb-3">
-          <Badge
-            bg="success"
-            pill
-            className="px-3 py-2"
-            style={{ cursor: "pointer" }}
-          >
+          <Badge bg="success" pill className="px-3 py-2" style={{ cursor: "pointer" }}>
             Aziende
           </Badge>
           <Badge
@@ -25,8 +16,7 @@ const InterestsCard = () => {
             text="dark"
             pill
             className="px-3 py-2 border text-muted"
-            style={{ cursor: "pointer" }}
-          >
+            style={{ cursor: "pointer" }}>
             Gruppi
           </Badge>
           <Badge
@@ -34,8 +24,7 @@ const InterestsCard = () => {
             text="dark"
             pill
             className="px-3 py-2 border text-muted"
-            style={{ cursor: "pointer" }}
-          >
+            style={{ cursor: "pointer" }}>
             Scuole o università
           </Badge>
         </div>
@@ -45,26 +34,20 @@ const InterestsCard = () => {
             <div className="d-flex align-items-start p-2 border rounded">
               <div
                 className="bg-info text-white d-flex align-items-center justify-content-center rounded me-3"
-                style={{ width: "40px", height: "40px", flexShrink: 0 }}
-              >
+                style={{ width: "40px", height: "40px", flexShrink: 0 }}>
                 <FontAwesomeIcon icon={faHeart} />
               </div>
               <div>
                 <h6 className="fw-bold mb-0 small">
-                  Patches, a puzzle by LinkedIn{" "}
-                  <span className="text-warning">in</span>
+                  Patches, a puzzle by LinkedIn <span className="text-warning">in</span>
                 </h6>
-                <div
-                  className="text-muted extra-small"
-                  style={{ fontSize: "11px" }}
-                >
+                <div className="text-muted extra-small" style={{ fontSize: "11px" }}>
                   7.717.652 follower
                 </div>
                 <Button
                   variant="outline-secondary"
                   size="sm"
-                  className="rounded-pill mt-2 px-3 fw-bold"
-                >
+                  className="rounded-pill mt-2 px-3 fw-bold">
                   <FontAwesomeIcon icon={faCheck} className="me-1" /> Già segui
                 </Button>
               </div>
@@ -75,25 +58,18 @@ const InterestsCard = () => {
             <div className="d-flex align-items-start p-2 border rounded">
               <div
                 className="bg-danger text-white d-flex align-items-center justify-content-center rounded me-3"
-                style={{ width: "40px", height: "40px", flexShrink: 0 }}
-              >
+                style={{ width: "40px", height: "40px", flexShrink: 0 }}>
                 <FontAwesomeIcon icon={faGraduationCap} />
               </div>
               <div>
-                <h6 className="fw-bold mb-0 small">
-                  EPICODE Institute of Technology
-                </h6>
-                <div
-                  className="text-muted extra-small"
-                  style={{ fontSize: "11px" }}
-                >
+                <h6 className="fw-bold mb-0 small">EPICODE Institute of Technology</h6>
+                <div className="text-muted extra-small" style={{ fontSize: "11px" }}>
                   23.263 follower
                 </div>
                 <Button
                   variant="outline-secondary"
                   size="sm"
-                  className="rounded-pill mt-2 px-3 fw-bold"
-                >
+                  className="rounded-pill mt-2 px-3 fw-bold">
                   <FontAwesomeIcon icon={faCheck} className="me-1" /> Già segui
                 </Button>
               </div>
@@ -102,7 +78,7 @@ const InterestsCard = () => {
         </Row>
       </Card.Body>
     </Card>
-  );
-};
+  )
+}
 
-export default InterestsCard;
+export default InterestsCard

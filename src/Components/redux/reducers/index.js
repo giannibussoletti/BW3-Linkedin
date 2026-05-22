@@ -3,16 +3,17 @@ import {
   createExperience,
   updateExperience,
   deleteExperience,
-} from "../actions/actions";
-
-import { SET_COVER_IMAGE, SET_PROFILE_IMAGE } from "../actions/editorPicture";
-export const OPEN_PROFILE_MODAL = "OPEN_PROFILE_MODAL";
-export const CLOSE_PROFILE_MODAL = "CLOSE_PROFILE_MODAL";
-export const OPEN_EDIT_MODAL = "OPEN_EDIT_MODAL";
-export const CLOSE_EDIT_MODAL = "CLOSE_EDIT_MODAL";
-
-export const OPEN_COVER_MODAL = "OPEN_COVER_MODAL";
-export const CLOSE_COVER_MODAL = "CLOSE_COVER_MODAL";
+} from "../actions/actions"
+import {
+  GET_JOBS,
+  OPEN_PROFILE_MODAL,
+  CLOSE_PROFILE_MODAL,
+  OPEN_EDIT_MODAL,
+  CLOSE_EDIT_MODAL,
+  OPEN_COVER_MODAL,
+  CLOSE_COVER_MODAL,
+} from "../actions/actions"
+import { SET_COVER_IMAGE, SET_PROFILE_IMAGE } from "../actions/editorPicture"
 
 const initialState = {
   content: [],
@@ -25,7 +26,8 @@ const initialState = {
   isProfileModalOpen: false,
   isEditorPicModalOpen: false,
   isCoverModalOpen: false,
-};
+  jobsArray: [],
+}
 
 const mainReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -33,23 +35,23 @@ const mainReducer = (state = initialState, action) => {
     case createExperience.pending.type:
     case updateExperience.pending.type:
     case deleteExperience.pending.type:
-      return { ...state, isLoading: true, error: null };
+      return { ...state, isLoading: true, error: null }
 
     case fetchExperiences.rejected.type:
     case createExperience.rejected.type:
     case updateExperience.rejected.type:
     case deleteExperience.rejected.type:
-      return { ...state, isLoading: false, error: action.payload };
+      return { ...state, isLoading: false, error: action.payload }
 
     case fetchExperiences.fulfilled.type:
-      return { ...state, isLoading: false, content: action.payload };
+      return { ...state, isLoading: false, content: action.payload }
 
     case createExperience.fulfilled.type:
       return {
         ...state,
         isLoading: false,
         content: [...state.content, action.payload],
-      };
+      }
 
     case updateExperience.fulfilled.type:
       return {
@@ -58,64 +60,70 @@ const mainReducer = (state = initialState, action) => {
         content: state.content.map((exp) =>
           exp._id === action.payload._id ? action.payload : exp,
         ),
-      };
+      }
 
     case deleteExperience.fulfilled.type:
       return {
         ...state,
         isLoading: false,
         content: state.content.filter((exp) => exp._id !== action.payload),
-      };
+      }
     case SET_COVER_IMAGE:
       return {
         ...state,
         currentCover: action.payload,
-      };
+      }
     case SET_PROFILE_IMAGE:
       return {
         ...state,
         currentProfile: action.payload,
-      };
+      }
 
     case OPEN_PROFILE_MODAL:
       return {
         ...state,
         isProfileModalOpen: true,
-      };
+      }
 
     case CLOSE_PROFILE_MODAL:
       return {
         ...state,
         isProfileModalOpen: false,
-      };
+      }
 
     case OPEN_EDIT_MODAL:
       return {
         ...state,
         isEditorPicModalOpen: true,
-      };
+      }
 
     case CLOSE_EDIT_MODAL:
       return {
         ...state,
         isEditorPicModalOpen: false,
-      };
+      }
 
     case OPEN_COVER_MODAL:
       return {
         ...state,
         isCoverModalOpen: true,
-      };
+      }
 
     case CLOSE_COVER_MODAL:
       return {
         ...state,
         isCoverModalOpen: false,
-      };
+      }
+
+    case GET_JOBS:
+      return {
+        ...state,
+        jobsArray: action.payload,
+      }
 
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default mainReducer;
+export default mainReducer

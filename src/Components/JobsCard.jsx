@@ -1,27 +1,16 @@
 import { Col, Card, Container, Row, Button, ListGroup } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { fetchJobs } from "./redux/actions/actions"
 
 const JobsCard = () => {
-  const [jobs, setJobs] = useState([])
+  const jobs = useSelector((store) => store.jobsArray)
 
-  const fetchJobs = () => {
-    fetch("https://strive-benchmark.herokuapp.com/api/jobs?search=Front-end")
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-        } else {
-          throw new Error(response.status)
-        }
-      })
-      .then((data) => {
-        setJobs(data.data)
-      })
-      .catch((err) => console.log(err))
-  }
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    fetchJobs()
+    dispatch(fetchJobs())
   }, [])
 
   return (
