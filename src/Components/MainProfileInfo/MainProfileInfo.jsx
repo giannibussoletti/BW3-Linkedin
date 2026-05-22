@@ -6,11 +6,15 @@ import ChangeProfilePic from "../ChangeProfilePic"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import ChangeCoverPic from "../../ChangeCoverPic"
 import { OPEN_COVER_MODAL, OPEN_PROFILE_MODAL } from "../redux/actions/actions"
-
+import { useEffect } from "react"
+import { profileFetchAction } from "../redux/actions/actions"
 const MainProfileInfo = () => {
+  const profileInfo = useSelector((store) => store.profileInfo)
   const currentCover = useSelector((state) => state.currentCover)
-  const profileImage = useSelector((state) => state.currentProfile)
   const dispatch = useDispatch()
+
+  useEffect(() => dispatch(profileFetchAction()), [])
+  console.log(profileInfo)
 
   return (
     <Container fluid className="p-0 bg-white mb-3 rounded-3 shadow-sm">
@@ -34,7 +38,7 @@ const MainProfileInfo = () => {
             }}>
             <Image
               className="rounded-circle"
-              src={profileImage}
+              src={profileInfo.image}
               style={{ height: "152px", width: "152px", objectFit: "cover" }}
               onClick={() => dispatch({ type: OPEN_PROFILE_MODAL })}
             />
@@ -51,13 +55,12 @@ const MainProfileInfo = () => {
           />
         </Col>
         <Col xs={12} md={8}>
-          <h3 className="fw-semibold">Gianni Bussoletti</h3>
-          <p className="m-0">
-            Skill up in Full Stack developer presso EPICODE | Amante del cinema | Videomaker | Ex
-            Graphic Designer
-          </p>
+          <h3 className="fw-semibold">
+            {profileInfo.name} {profileInfo.surname}
+          </h3>
+          <p className="m-0">{profileInfo.title}</p>
           <p className="text-secondary mb-2" style={{ fontSize: ".9rem" }}>
-            Guidonia Montecelio, Lazio, Italia ·{" "}
+            {profileInfo.area} ·{" "}
             <span className="text-primary fw-bold">Informazioni di contatto</span>
           </p>
           <p style={{ fontSize: ".9rem" }} className="text-primary fw-bold">
