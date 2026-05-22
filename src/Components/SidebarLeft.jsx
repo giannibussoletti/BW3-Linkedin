@@ -35,7 +35,7 @@ const SidebarLeft = () => {
           }}
         />
 
-        <Card.Body>
+        <Card.Body className="pb-0">
           <Card.Title className="h4 fw-bold mb-0 mt-5">
             Name Surname <FontAwesomeIcon icon={["fas", "shield-halved"]} />
           </Card.Title>
@@ -43,6 +43,15 @@ const SidebarLeft = () => {
           <Card.Text className="m-0 p-0">Bio</Card.Text>
           <Card.Text className="m-0 p-0 text-muted">Area</Card.Text>
         </Card.Body>
+        <div className="px-1 d-flex align-items-center">
+          <img
+            src="../epicodeschool_logo.jpg"
+            alt=""
+            style={{ width: "50px" }}
+            className="rounded-circle border border-2 border-light"
+          />
+          <p className="mb-0 fw-bold">Epicode</p>
+        </div>
       </Card>
       <Card className="p-2 px-3 shadow-sm rounded-3 mb-3">
         <p className="text-muted mb-1">
