@@ -5,6 +5,7 @@ import {
   deleteExperience,
 } from "../actions/actions"
 import {
+  GET_PROFILE,
   GET_JOBS,
   OPEN_PROFILE_MODAL,
   CLOSE_PROFILE_MODAL,
@@ -27,6 +28,7 @@ const initialState = {
   isEditorPicModalOpen: false,
   isCoverModalOpen: false,
   jobsArray: [],
+  profileInfo: {},
 }
 
 const mainReducer = (state = initialState, action) => {
@@ -119,6 +121,12 @@ const mainReducer = (state = initialState, action) => {
       return {
         ...state,
         jobsArray: action.payload,
+      }
+
+    case GET_PROFILE:
+      return {
+        ...state,
+        profileInfo: action.payload,
       }
 
     default:

@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { CLOSE_PROFILE_MODAL, OPEN_EDIT_MODAL } from "./redux/actions/actions"
 
 const ProfilePic = () => {
-  const profileImage = useSelector((state) => state.currentProfile)
+  const profileInfo = useSelector((state) => state.profileInfo)
   const show = useSelector((state) => state.isProfileModalOpen)
   const dispatch = useDispatch()
 
@@ -36,7 +36,7 @@ const ProfilePic = () => {
         </div>
         <div className="d-flex justify-content-center mb-2 pt-3">
           <img
-            src={profileImage}
+            src={profileInfo.image}
             alt="Immagine Profilo"
             className="rounded-circle"
             style={{ width: "400px", height: "400px" }}

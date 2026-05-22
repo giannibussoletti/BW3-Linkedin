@@ -9,6 +9,7 @@ import { CLOSE_EDIT_MODAL } from "./redux/actions/actions"
 const ChangeProfilePic = () => {
   const dispatch = useDispatch()
   const show = useSelector((state) => state.isEditorPicModalOpen)
+  const profileInfo = useSelector((state) => state.profileInfo)
 
   const currentProfile = useSelector((state) => state.currentProfile)
 

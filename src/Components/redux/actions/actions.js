@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 
 export const GET_JOBS = "GET_JOBS"
+export const GET_PROFILE = "GET_PROFILE"
 export const OPEN_PROFILE_MODAL = "OPEN_PROFILE_MODAL"
 export const CLOSE_PROFILE_MODAL = "CLOSE_PROFILE_MODAL"
 export const OPEN_EDIT_MODAL = "OPEN_EDIT_MODAL"
@@ -94,7 +95,7 @@ export const deleteExperience = createAsyncThunk(
 )
 
 export const fetchJobs = () => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     fetch("https://strive-benchmark.herokuapp.com/api/jobs?search=Front-end")
       .then((response) => {
         if (response.ok) {
@@ -109,6 +110,32 @@ export const fetchJobs = () => {
           payload: data.data,
         })
       })
+      .catch((err) => console.log(err))
+  }
+}
+
+// Profile Fetch
+export const profileFetchAction = () => {
+  return (dispatch) => {
+    fetch("https://striveschool-api.herokuapp.com/api/profile/me", {
+      headers: {
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTBiMGZiMDA2YmJlOTAwMTVkZWU1OGEiLCJpYXQiOjE3NzkxMDk4MDgsImV4cCI6MTc4MDMxOTQwOH0.NcEsDXU_hRcTEeLEQZqtcnmcYnQvt2mj7zUv9tSJ22M",
+      },
+    })
+      .then((res) =>
+        res.ok
+          ? res.json()
+          : () => {
+              throw new Error(res.status)
+            },
+      )
+      .then((data) =>
+        dispatch({
+          type: GET_PROFILE,
+          payload: data,
+        }),
+      )
       .catch((err) => console.log(err))
   }
 }

@@ -1,21 +1,28 @@
-import { Card, Col } from "react-bootstrap";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router";
+import { Card, Col } from "react-bootstrap"
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router"
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { profileFetchAction } from "./redux/actions/actions"
+import { useEffect } from "react"
 
 const SidebarLeft = () => {
-  const currentCover = useSelector((state) => state.currentCover);
-  const profileImage = useSelector((state) => state.currentProfile);
-  const navigate = useNavigate();
-  const userId = "6a0d76433a03a800150d93cc";
+  const dispatch = useDispatch()
+  const profileInfo = useSelector((store) => store.profileInfo)
+
+  const currentCover = useSelector((state) => state.currentCover)
+  const profileImage = profileInfo.image
+  const navigate = useNavigate()
+  const userId = profileInfo._id
+
+  useEffect(() => dispatch(profileFetchAction()), [])
+
   return (
     <Col>
       <Card
         className="shadow-sm rounded-3 position-relative mb-3"
         style={{ cursor: "pointer" }}
-        onClick={() => navigate(`/profile/${userId}`)}
-      >
+        onClick={() => navigate(`/profile/${userId}`)}>
         <Card.Img
           className="rounded-top-3"
           variant="top"
@@ -37,11 +44,12 @@ const SidebarLeft = () => {
 
         <Card.Body className="pb-0">
           <Card.Title className="h4 fw-bold mb-0 mt-5">
-            Name Surname <FontAwesomeIcon icon={["fas", "shield-halved"]} />
+            {profileInfo.name} {profileInfo.surname}{" "}
+            <FontAwesomeIcon icon={["fas", "shield-halved"]} />
           </Card.Title>
 
-          <Card.Text className="m-0 p-0">Bio</Card.Text>
-          <Card.Text className="m-0 p-0 text-muted">Area</Card.Text>
+          <Card.Text className="m-0 p-0">{profileInfo.bio}</Card.Text>
+          <Card.Text className="m-0 p-0 text-muted">{profileInfo.title}</Card.Text>
         </Card.Body>
         <div className="px-1 d-flex align-items-center">
           <img
@@ -54,13 +62,8 @@ const SidebarLeft = () => {
         </div>
       </Card>
       <Card className="p-2 px-3 shadow-sm rounded-3 mb-3">
-        <p className="text-muted mb-1">
-          Accedi a strumenti e informazioni in esclusiva
-        </p>
-        <p
-          style={{ cursor: "pointer" }}
-          className="fw-bold mb-0 link-primary text-black"
-        >
+        <p className="text-muted mb-1">Accedi a strumenti e informazioni in esclusiva</p>
+        <p style={{ cursor: "pointer" }} className="fw-bold mb-0 link-primary text-black">
           Prova Premium per 0 €
         </p>
       </Card>
@@ -94,7 +97,7 @@ const SidebarLeft = () => {
         </div>
       </Card>
     </Col>
-  );
-};
+  )
+}
 
-export default SidebarLeft;
+export default SidebarLeft

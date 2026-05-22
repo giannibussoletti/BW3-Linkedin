@@ -1,19 +1,23 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Modal from "react-bootstrap/Modal"
 import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
 import Card from "react-bootstrap/Card"
 import EmojiPicker from "emoji-picker-react"
-
+import { profileFetchAction } from "./redux/actions/actions"
+import { useDispatch, useSelector } from "react-redux"
 const TokenPaolo =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTBhZDU4NDA2YmJlOTAwMTVkZWU1N2UiLCJpYXQiOjE3NzkwOTQ5MTYsImV4cCI6MTc4MDMwNDUxNn0.76kWBS67r5ygr_d-wqdXMOaMNYRsOUCAvuKafyaiAHA"
 
 const PostCard = () => {
+  const profileInfo = useSelector((store) => store.profileInfo)
   const [showModal, setShowModal] = useState(false)
   const [postText, setPostText] = useState("")
   const [showPicker, setShowPicker] = useState(false)
   const [selectedImage, setSelectedImage] = useState(null)
   const [imagePreview, setImagePreview] = useState(null)
+  const dispatch = useDispatch()
+  useEffect(() => dispatch(profileFetchAction()), [])
 
   const handleClose = () => {
     setShowModal(false)
@@ -180,9 +184,9 @@ const PostCard = () => {
             style={{ margin: "1vw", width: "5vw", borderRadius: 20 }}
             className="m-1 w-3 rounded"
             variant="left"
-            src="./mockup/user1.png"
+            src={profileInfo.image}
           />
-          <Modal.Title>userName</Modal.Title>
+          <Modal.Title>{profileInfo.name + " " + profileInfo.surname} </Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
