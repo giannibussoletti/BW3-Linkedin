@@ -10,7 +10,7 @@ export const OPEN_COVER_MODAL = "OPEN_COVER_MODAL"
 export const CLOSE_COVER_MODAL = "CLOSE_COVER_MODAL"
 
 const TOKEN =
-  "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTBkNzY0MzNhMDNhODAwMTUwZDkzY2MiLCJpYXQiOjE3NzkyNjcxMzksImV4cCI6MTc4MDQ3NjczOX0.DM4Hs5Nuy-5MmEDBTw_usjpOdbtCE6Y7X26noLrfTLE"
+  "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTBiMGZiMDA2YmJlOTAwMTVkZWU1OGEiLCJpYXQiOjE3NzkxMDk4MDgsImV4cCI6MTc4MDMxOTQwOH0.NcEsDXU_hRcTEeLEQZqtcnmcYnQvt2mj7zUv9tSJ22M"
 const BASE_URL = "https://striveschool-api.herokuapp.com/api/profile"
 
 export const fetchExperiences = createAsyncThunk("experiences/fetchAll", (userId, thunkAPI) => {

@@ -7,7 +7,7 @@ import EmojiPicker from "emoji-picker-react"
 import { profileFetchAction } from "./redux/actions/actions"
 import { useDispatch, useSelector } from "react-redux"
 const TokenPaolo =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTBhZDU4NDA2YmJlOTAwMTVkZWU1N2UiLCJpYXQiOjE3NzkwOTQ5MTYsImV4cCI6MTc4MDMwNDUxNn0.76kWBS67r5ygr_d-wqdXMOaMNYRsOUCAvuKafyaiAHA"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTBiMGZiMDA2YmJlOTAwMTVkZWU1OGEiLCJpYXQiOjE3NzkxMDk4MDgsImV4cCI6MTc4MDMxOTQwOH0.NcEsDXU_hRcTEeLEQZqtcnmcYnQvt2mj7zUv9tSJ22M"
 
 const PostCard = () => {
   const profileInfo = useSelector((store) => store.profileInfo)
