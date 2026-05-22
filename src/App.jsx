@@ -11,6 +11,7 @@ import ChatBox from "./Components/ChatBox"
 import RightSideBarProfile from "./Components/RightSideBarProfile"
 import LoginModal from "./Components/LoginModal"
 import JobsCard from "./Components/JobsCard"
+
 //
 import { BrowserRouter, Route, Routes } from "react-router"
 import { library } from "@fortawesome/fontawesome-svg-core"
@@ -21,10 +22,12 @@ import { fab } from "@fortawesome/free-brands-svg-icons"
 library.add(fas, far, fab)
 
 import { Col, Row, Container } from "react-bootstrap"
+import ImgUpdate from "./Components/ImgUpdate"
 
 const App = function () {
   return (
     <BrowserRouter>
+      <ImgUpdate />
       <div className="bg-body-secondary" style={{ minHeight: "100vh" }}>
         <NavbarLinkedin />
         <Container className="mt-3">
